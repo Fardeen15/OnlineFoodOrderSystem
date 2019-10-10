@@ -11,11 +11,28 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 const Styles = theme => ({
     card: {
-        maxWidth: 345,
+        display: 'flex',
     },
+    details: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    content: {
+        flex: '1 0 auto',
+    },
+    cover: {
+        width: 151,
+    },
+    controls: {
+        display: 'flex',
+        alignItems: 'center',
+        paddingLeft: theme.spacing(1),
+        paddingBottom: theme.spacing(1),
+    },
+
 });
 
-class WebMAp extends React.Component {
+class MobMap extends React.Component {
     componentDidMount() {
         if (!this.props.data) {
             console.log(true)
@@ -32,14 +49,7 @@ class WebMAp extends React.Component {
                             if (this.props.name == value.ResturentName) {
                                 return (
                                     <Card className={classes.card}>
-                                        <CardActionArea>
-                                            <CardMedia
-                                                component="img"
-                                                alt="Contemplative Reptile"
-                                                height="140"
-                                                image="/static/images/cards/contemplative-reptile.jpg"
-                                                title="Contemplative Reptile"
-                                            />
+                                        <div className={classes.details}>
                                             <CardContent>
                                                 <Typography gutterBottom variant="h5" component="h2">
                                                     {value.ResturentName}
@@ -54,36 +64,39 @@ class WebMAp extends React.Component {
                                                     area : {value.area}
                                                 </Typography>
                                             </CardContent>
-                                        </CardActionArea>
+                                        </div>
+                                        <CardMedia
+                                            className={classes.cover}
+                                            image="/static/images/cards/live-from-space.jpg"
+                                            title="Live from space album cover"
+                                        />
                                     </Card>)
                             }
                         } else {
                             return (
                                 <Card className={classes.card}>
-                                    <CardActionArea>
-                                        <CardMedia
-                                            component="img"
-                                            alt="Contemplative Reptile"
-                                            height="140"
-                                            image="/static/images/cards/contemplative-reptile.jpg"
-                                            title="Contemplative Reptile"
-                                        />
-                                        <CardContent>
-                                            <Typography gutterBottom variant="h5" component="h2">
-                                                {value.ResturentName}
-                                            </Typography>
-                                            <Typography variant="body2" color="textSecondary" component="p">
-                                                Deliver Charges : {value.cash}
-                                            </Typography>
-                                            <Typography color="textSecondary" component="p">
-                                                city : {value.city}
-                                            </Typography>
-                                            <Typography color="textSecondary" component="p">
-                                                area : {value.area}
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>)
+                                <div className={classes.details}>
+                                    <CardContent>
+                                        <Typography gutterBottom variant="h5" component="h2">
+                                            {value.ResturentName}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary" component="p">
+                                            Deliver Charges : {value.cash}
+                                        </Typography>
+                                        <Typography color="textSecondary" component="p">
+                                            city : {value.city}
+                                        </Typography>
+                                        <Typography color="textSecondary" component="p">
+                                            area : {value.area}
+                                        </Typography>
+                                    </CardContent>
+                                </div>
+                                <CardMedia
+                                    className={classes.cover}
+                                    image="/static/images/cards/live-from-space.jpg"
+                                    title="Live from space album cover"
+                                />
+                            </Card>)
                         }
                     })
                     : null}
@@ -98,4 +111,4 @@ const mapStateToProps = (state) => {
     }
 }
 const mapDispatchToProps = { getdata }
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(Styles)(WebMAp))
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(Styles)(MobMap))

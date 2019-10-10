@@ -78,22 +78,55 @@ class SignIn extends React.Component {
 
             auth.signInWithEmailAndPassword(this.state.email, this.state.password).then(() => {
                 this.props.getdata()
-                this.props.history.push('/mainpage')
-                message.success('logIN Succesfully')
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        var data = Object.values(this.props.data)
+                        console.log(data)
+                        for (var i = 0; i < data.length; i++) {
+                            if (Object.keys(data[i]) == user.uid) {
+                                if (Object.values(data[i])[0].category == 'user') {
+                                    this.props.history.push('/mainpage')
+                                }else{
+                                    this.props.history.push('/Home')
+                                }
+                            }
+                        }
+
+                    }
+                    message.success('logIN Succesfully')
+                })
             }).catch((err) => {
                 message.error(err.message)
             })
         }
     }
-    // componentDidMount(){
-    //     auth.onAuthStateChanged((user)=>{
-    //         if(user){
-    //             this.props.history.push('/mainpage')
+    componentDidMount() {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                this.props.getdata()
+            }
+        })
+    }
+    componentWillReceiveProps() {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                var data = Object.values(this.props.data)
+                for (var i = 0; i < data.length; i++) {
+                    if (Object.keys(data[i]) == user.uid) {
+                        if (Object.values(data[i])[0].category == 'user') {
+                            this.props.history.push('/mainpage')
+                        }else{
+                            this.props.history.push('/Home')
+                        }
+                    }
+                }
 
-    //         }
-    //     })
-    // }
+            }
+        })
+    }
+
     render() {
+        
         const { classes } = this.props
         return (
             <Paper className={classes.main} style={{ backgroundImage: `url(${img1})` }}>

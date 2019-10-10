@@ -9,3 +9,28 @@
 .login-form-button {
   width: 100%;
 }
+.dynamic-delete-button {
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+  font-size: 24px;
+  color: #999;
+  transition: all 0.3s;
+}
+.dynamic-delete-button:hover {
+  color: #777;
+}
+.dynamic-delete-button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+/* .ant-select-dropdown-hidden{
+  z-index: 8000 !important;
+} */
+.ant-select-dropdown{
+  z-index: 8000 !important;
+}
+.ant-popover, .ant-popover-placement-left, .ant-popover-placement-leftTop, .ant-popover-placement-leftBottom {
+  z-index: 8000 !important;
+  position: fixed !important;
+}
