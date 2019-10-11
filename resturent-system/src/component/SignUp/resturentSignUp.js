@@ -24,18 +24,19 @@ class ResturentSignUp extends React.Component {
     }
     submit = () => {
         if (this.state.Name && this.state.email && this.state.password && this.state.city && this.state.area && this.state.cash) {
-            var obj = {
-                ResturentName: this.state.Name,
-                email: this.state.email,
-                password: this.state.password,
-                city: this.state.city,
-                area: this.state.area,
-                cash: this.state.cash,
-                category:'resturant'
-            }
             auth.createUserWithEmailAndPassword(this.state.email,this.state.password).then(()=>{
                 auth.onAuthStateChanged((user)=>{
                     if(user){
+                        var obj = {
+                            id : user.uid,
+                            ResturentName: this.state.Name,
+                            email: this.state.email,
+                            password: this.state.password,
+                            city: this.state.city,
+                            area: this.state.area,
+                            cash: this.state.cash,
+                            category:'resturant'
+                        }
                         db.ref().child('wholeData').child('resturents').child(user.uid).set(obj).then(()=>{
                             message.success('your account is created succesfully')
                             this.props.close()

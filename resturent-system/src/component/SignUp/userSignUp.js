@@ -22,16 +22,17 @@ class UserSignUp extends React.Component {
     }
     submit = () => {
         if (this.state.Name && this.state.email && this.state.password) {
-            var obj = {
-                fullname: this.state.Name,
-                email: this.state.email,
-                password: this.state.password,
-                number: this.state.number,
-                category:'user'
-            }
             auth.createUserWithEmailAndPassword(this.state.email, this.state.password).then(() => {
                 auth.onAuthStateChanged((user) => {
                     if (user) {
+                        var obj = {
+                            id: user.uid,
+                            fullname: this.state.Name,
+                            email: this.state.email,
+                            password: this.state.password,
+                            number: this.state.number,
+                            category: 'user'
+                        }
                         db.ref().child('wholeData').child('user').child(user.uid).set(obj).then(() => {
                             message.success('your account is created succesfully')
                             this.props.close()

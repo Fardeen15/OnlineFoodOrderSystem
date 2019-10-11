@@ -9,6 +9,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { withRouter } from 'react-router-dom'
+
 const Styles = theme => ({
     card: {
         maxWidth: 345,
@@ -16,11 +18,11 @@ const Styles = theme => ({
 });
 
 class WebMAp extends React.Component {
-    componentDidMount() {
-        if (!this.props.data) {
-            console.log(true)
-            this.props.getdata()
-        }
+    
+    route=(name)=>{
+        console.log(this.props.match.params)
+        this.props.match.params.id = name
+        this.props.history.push(`/mainpage/${name}`)
     }
     render() {
         const { classes } = this.props
@@ -31,7 +33,7 @@ class WebMAp extends React.Component {
                         if (this.props.name) {
                             if (this.props.name == value.ResturentName) {
                                 return (
-                                    <Card className={classes.card}>
+                                    <Card onClick={()=>this.route(value.ResturentName)} className={classes.card}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -59,7 +61,7 @@ class WebMAp extends React.Component {
                             }
                         } else {
                             return (
-                                <Card className={classes.card}>
+                                <Card  onClick={()=>this.route(value.ResturentName)} className={classes.card}>
                                     <CardActionArea>
                                         <CardMedia
                                             component="img"
@@ -92,10 +94,9 @@ class WebMAp extends React.Component {
     }
 }
 const mapStateToProps = (state) => {
-    console.log(state)
     return {
         data: state.resturents
     }
 }
 const mapDispatchToProps = { getdata }
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(Styles)(WebMAp))
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(Styles)(withRouter(WebMAp)))
