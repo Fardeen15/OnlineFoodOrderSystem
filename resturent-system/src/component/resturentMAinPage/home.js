@@ -1,5 +1,5 @@
 import React from 'react'
-import { Popover } from 'antd';
+import { Popover, Empty } from 'antd';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -33,7 +33,7 @@ const Styles = theme => ({
     },
     margin: {
         margin: theme.spacing(2),
-      },
+    },
     list: {
         marginBottom: theme.spacing(2),
     },
@@ -122,11 +122,15 @@ class Home extends React.Component {
 
         return (
             <div>
-                <p><Button>
-                    pending Orders
+                <p>
+                    <Badge color="secondary" badgeContent={this.state.data.pendingOrder ? Object.values(this.state.data.pendingOrder).length : 0} >
+
+                        <Button onClick={() => { this.setState({ map: "pendingOrder" }) }}>
+                            pending Orders
                     </Button>
+                    </Badge>
                 </p>
-                <p> <Button>
+                <p> <Button onClick={() => { this.setState({ map: "deliveredOrders" }) }}>
                     Deleverd Orders
                     </Button></p>
                 <p> <Button onClick={this.addItems}>
@@ -185,7 +189,7 @@ class Home extends React.Component {
                 <CssBaseline />
                 <Paper square className={classes.paper}>
                     <Typography className={classes.text} variant="h5" gutterBottom>
-                        Inbox
+                        {this.state.map} Inbox
                         </Typography>
                     <List className={classes.list}>
                         {this.state.data[this.state.map] ? Object.values(this.state.data[this.state.map]).map((value, index) => {
@@ -196,7 +200,7 @@ class Home extends React.Component {
                                     </ListItem>
                                 </React.Fragment>
                             )
-                        }) : null}
+                        }) : <Empty/>}
                     </List>
                 </Paper>
 
@@ -216,7 +220,7 @@ class Home extends React.Component {
                                 pending Orders
                         </Button>
                         </Badge>
-                        <Button onClick={() => { this.setState({ map: "newOrder" }) }}>
+                        <Button onClick={() => { this.setState({ map: "deliveredOrders" }) }}>
                             Deleverd Orders
                         </Button>
 
@@ -229,7 +233,7 @@ class Home extends React.Component {
                 </AppBar>
                 <AppBar position="fixed" color="primary" className={classes.appBar2}>
                     <Toolbar>
-                        <Badge color="primary" badgeContent={4} className={classes.margin}>
+                        <Badge color="secondary" badgeContent={this.state.data.newOrder ? Object.values(this.state.data.newOrder).length : 0} className={classes.margin}>
                             <Button onClick={() => { this.setState({ map: "newOrder" }) }}>
                                 new orders
                         </Button>

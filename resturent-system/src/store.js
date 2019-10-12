@@ -5,7 +5,6 @@ function user(state = {}, action) {
 
     switch (action.type) {
         case 'get':
-            console.log(action.payload)
             return state = action.payload
         default:
             return state

@@ -14,6 +14,7 @@ import Menucard from './menucard';
 const Styles = theme => ({
     root: {
         flexGrow: 1,
+        overflowX: 'hidden',
     },
     // webmenu: {
     //     display: 'none',

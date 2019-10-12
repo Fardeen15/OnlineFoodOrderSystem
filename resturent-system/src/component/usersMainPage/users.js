@@ -4,15 +4,33 @@ import WebMap from './webMap'
 import AppBarComponent from './appbar'
 import { withStyles } from '@material-ui/core/styles';
 import MobMap from './mobMap';
-
+import img from './download.jpg'
 const Styles = theme => ({
     paperWeb: {
+        height: "90vh",
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '100% 100%',
+        backgroundImage: `url(${img})`,
+        boxShadow: 'none',
         display: 'none',
         [theme.breakpoints.up('sm')]: {
             display: 'block'
         }
     },
+    rgbaDiv: {
+        height: "90vh",
+        overflowY: 'scroll',
+        backgroundColor: 'rgba(0,0,0,0.4)',
+    },
     papermob: {
+        height: "90vh",
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '100% 100%',
+        backgroundImage: `url(${img})`,
+        boxShadow: 'none',
+        boxShadow: 'none',
         display: 'block',
         [theme.breakpoints.up('sm')]: {
             display: 'none'
@@ -38,10 +56,14 @@ class UsersMainPage extends React.Component {
                 <AppBarComponent ResturentName={this.state.ResturentName} val={this.change} />
                 <main>
                     <Paper className={classes.paperWeb}>
-                        <WebMap name={this.state.ResturentName} />
+                        <div className={classes.rgbaDiv}>
+                            <WebMap name={this.state.ResturentName} />
+                        </div>
                     </Paper>
                     <Paper className={classes.papermob}>
-                        <MobMap name={this.state.ResturentName}/>
+                        <div className={classes.rgbaDiv}>
+                            <MobMap name={this.state.ResturentName} />
+                        </div>
                     </Paper>
                 </main>
             </div>

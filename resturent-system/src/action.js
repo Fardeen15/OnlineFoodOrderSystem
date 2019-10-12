@@ -1,14 +1,17 @@
-import { auth, db } from "./firebaseConfige";
+import { auth, db, storage } from "./firebaseConfige";
 
 export function getdata() {
     return (dispatch) => {
         auth.onAuthStateChanged((user) => {
             if (user) {
                 db.ref().child('wholeData').on('value', (snap) => {
-                    console.log(snap.val())
-                    dispatch({
-                        type: "get",
-                        payload: snap.val()
+                    var data = snap.val()
+                    storage.ref('profileImages/').listAll().then((res) => {
+                        data.ProfileImages = res
+                        dispatch({
+                            type: "get",
+                            payload: data
+                        })
                     })
                 })
             } else {

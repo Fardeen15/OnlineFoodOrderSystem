@@ -33,7 +33,6 @@ class OrderPage extends React.Component {
     }
     componentWillMount() {
         if (this.props.data) {
-
             Object.values(this.props.data).map((value) => {
                 if (this.props.match.params.id == value.ResturentName) {
                     this.setState({
@@ -109,7 +108,7 @@ class OrderPage extends React.Component {
                         <Input value={this.state.data ? this.state.data.cash : ""} disabled={true} />
                     </Form.Item>
                     <Form.Item {...buttonItemLayout}>
-                        <Button onClick={this.addOrder} type="primary" {...formItemLayout}>Submit</Button>
+                    <Button onClick={this.addOrder} type="primary" {...formItemLayout}>Submit</Button>  <Button onClick={()=>this.props.history.push('/mainpage')} type="secondary" {...formItemLayout}>cancel</Button>
                     </Form.Item>
                 </Form>
             </div>

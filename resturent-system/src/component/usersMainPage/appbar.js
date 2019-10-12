@@ -1,11 +1,11 @@
 import { withStyles, fade } from '@material-ui/core/styles';
 import React, { Component } from 'react';
-import { AppBar, InputBase, IconButton, Toolbar, Button } from '@material-ui/core';
+import { AppBar, InputBase, IconButton, Toolbar, Button, Badge } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import { auth, db } from '../../firebaseConfige';
 import { withRouter } from 'react-router-dom'
-import { Modal } from 'antd';
+import { Modal, message, Empty, Popover } from 'antd';
 import { connect } from 'react-redux'
 
 const Styles = theme => ({
@@ -48,6 +48,9 @@ const Styles = theme => ({
     inputRoot: {
         color: 'inherit',
     },
+    margin: {
+        margin: theme.spacing(2),
+    },
     inputInput: {
         padding: theme.spacing(1, 1, 1, 7),
         transition: theme.transitions.create('width'),
@@ -74,7 +77,10 @@ class AppBarComponent extends Component {
     constructor() {
         super()
         this.state = {
-            modal: false
+            modal: false,
+            arr: [],
+            keys: [],
+            id: ''
         }
     }
     signout = () => {
@@ -86,14 +92,58 @@ class AppBarComponent extends Component {
         this.setState({
             modal: true
         })
-        auth.onAuthStateChanged((user)=>{
-            if(user){
-                if(this.props.data.user[user.uid].AcceptedOrders){
-                    console.log(Object.values(this.props.data.user[user.uid].AcceptedOrders))
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                if (this.props.data.user[user.uid].AcceptedOrders) {
+                    this.setState({
+                        arr: Object.values(this.props.data.user[user.uid].AcceptedOrders),
+                        keys: Object.keys(this.props.data.user[user.uid].AcceptedOrders)
+                    })
                 }
             }
         })
     }
+    componentWillReceiveProps() {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                if (this.props.data.user[user.uid].AcceptedOrders) {
+                    this.setState({
+                        arr: Object.values(this.props.data.user[user.uid].AcceptedOrders),
+                        keys: Object.keys(this.props.data.user[user.uid].AcceptedOrders)
+                    })
+                }
+            }
+        })
+    }
+    received = (value, index) => {
+        console.log(this.state.keys[index], value)
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                db.ref().child('wholeData').child('resturents').child(value.resturentId).child('deliveredOrders').child(this.state.keys[index]).set(value).then(() => {
+                    db.ref().child('wholeData').child('resturents').child(value.resturentId).child('pendingOrder').child(this.state.keys[index]).remove().then(() => {
+                        db.ref().child('wholeData').child('user').child(user.uid).child('AcceptedOrders').child(this.state.keys[index]).remove().then(() => {
+                            message.success('thankyou for purcahse items!')
+                            this.setState({
+                                modal: false
+                            })
+                        })
+                    })
+                })
+            }
+        })
+    }
+    content = () => {
+        return (
+            <div>
+                <p> <Button onClick={this.signout}>
+                    Sign Out
+                            </Button></p>
+                <p> <Button onClick={this.PendingOrder}>
+                    Pending Order
+                            </Button></p>
+            </div>
+        )
+    };
     render() {
         const { classes } = this.props
 
@@ -118,17 +168,17 @@ class AppBarComponent extends Component {
                         </div>
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
-                            <Button onClick={this.PendingOrder}>Your Pending Orders</Button>
+                            <Badge className={classes.margin} color='secondary' badgeContent={this.state.arr.length}>
+                                <Button onClick={this.PendingOrder}>Your Pending Orders</Button>
+                            </Badge>
                             <Button onClick={this.signout}>SignOut</Button>
                         </div>
                         <div className={classes.sectionMobile}>
-                            <IconButton
-                                aria-label="show more"
-                                aria-haspopup="true"
-                                color="inherit"
-                            >
-                                <MoreIcon />
-                            </IconButton>
+                            <Popover style={{ zIndex: 8000 }} placement="leftTop" content={this.content()} trigger="click">
+                                <IconButton edge="end" color="inherit">
+                                    <MoreIcon />
+                                </IconButton>
+                            </Popover>
                         </div>
                     </Toolbar>
                 </AppBar>
@@ -139,9 +189,17 @@ class AppBarComponent extends Component {
                         onOk={() => this.setState({ modal: false })}
                         okText={"ok"}
                         cancelText="Decline"
-                        onCancel={() => this.setState({ val: "", infoDailog: false })}
+                        onCancel={() => this.setState({ modal: false })}
                     >
-            
+                        {
+                            this.state.arr.length ?
+                                this.state.arr.map((value, index) => {
+                                    return (
+                                        <p key={index}> Order : {value.order} <Button onClick={() => this.received(value, index)} color="secondary">Received</Button></p>
+                                    )
+                                })
+                                : <Empty />
+                        }
                     </Modal>
                     : null}
             </div>

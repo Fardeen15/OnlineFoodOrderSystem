@@ -26,12 +26,21 @@ class MenuDailog extends React.Component {
                 var key = Object.keys(this.props.data)
                 for (var i = 0; i < data.length; i++) {
                     if (key[i] == user.uid) {
-                        data[i].subItems = this.state.val
                         if (data[i].subItems) {
+                            data[i].subItems.push(this.state.val)
                             db.ref().child('wholeData').child('resturents').child(user.uid).update(data[i]).then(() => {
                                 message.success('your changes is save')
                                 this.props.close()
                             })
+                        } else {
+
+                            data[i].subItems = this.state.val
+                            if (data[i].subItems) {
+                                db.ref().child('wholeData').child('resturents').child(user.uid).update(data[i]).then(() => {
+                                    message.success('your changes is save')
+                                    this.props.close()
+                                })
+                            }
                         }
                     }
                 }

@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+import { withStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Select, message } from 'antd';
 import { auth, db } from '../../firebaseConfige';
@@ -14,6 +14,21 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Form, Icon, Input } from 'antd';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import { getdata } from '../../action';
+
+const Styles = theme => ({
+    
+    table: {
+        minWidth: "100%",
+    },
+   
+});
+
 const { Option } = Select;
 // let id = 0
 class AddItemDailog extends React.Component {
@@ -26,11 +41,30 @@ class AddItemDailog extends React.Component {
             id: 0,
             obj: {},
             name : "",
-            price : ""
+            price : "",
+            edit : "",
+            editDish : "",
+            editprice : "",
+            editval : ''
         }
 
     }
-    componentWillMount() {
+    componentWillMount(){
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                var data = Object.values(this.props.data)
+                var key = Object.keys(this.props.data)
+                for (var i = 0; i < data.length; i++) {
+                    if (key[i] == user.uid && data[i].subItems) {
+                        this.setState({
+                            obj: data[i]
+                        })
+                    }
+                }
+            }
+        })
+    }
+    componentWillReceiveProps() {
         auth.onAuthStateChanged((user) => {
             if (user) {
                 var data = Object.values(this.props.data)
@@ -119,7 +153,36 @@ class AddItemDailog extends React.Component {
             return value
         })
     }
+    edit = (value , index)=>{
+        this.setState({
+            edit : index,
+            editDish : value.name,
+            editprice : value.price,
+            editval : value
+        })
+    }
+    update = ()=>{
+        auth.onAuthStateChanged((user)=>{
+            if(user){
+                var obj = {
+                   name  : this.state.editDish,
+                   price :  this.state.editprice ,
+                   subitem:this.state.editval.subitem
+                }
+                db.ref().child('wholeData').child('resturents').child(user.uid).child('item').child(this.state.editval.subitem).child(this.state.editval.name).update(obj).then(()=>{
+                    this.props.getdata()
+                    this.setState({
+                        edit : "",
+                         editDish : "",
+                         editprice : "",
+                        editval : ""
+                    })
+                })
+            }
+        })
+    }
     render() {
+        const {classes} = this.props
         return (
             <div>
                 <Dialog
@@ -140,16 +203,49 @@ class AddItemDailog extends React.Component {
                                             <Typography>{value}</Typography>
                                         </ExpansionPanelSummary>
                                         <ExpansionPanelDetails style={{display:'block'}}>
-                                           
-                                            {this.state.obj.item ? 
+                                        <Table className={classes.table} size="small">
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            <TableCell>Dish (100g serving)</TableCell>
+                                                            <TableCell align="right">Price</TableCell>
+                                                            <TableCell align="right"></TableCell>
+                                                            <TableCell align="right"></TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                    {this.state.obj.item ? 
                                                 Object.values(this.state.obj.item).map((item)=>{
                                                    return Object.values(item).map((item2 , index2)=>{
                                                         if(item2.subitem == value){
-                                                            return <Typography><b>Dish{index2 + 1}</b> : {item2.name} <b>price</b> : {item2.price}</Typography>
+                                                            if(this.state.edit === index2){
+                                                                return( <TableRow key={index2}>
+                                                                    <TableCell scope="row">
+                                                                    <Input onChange = {(ev)=>this.change(ev,'editDish')} value = {this.state.editDish}/>
+                                                                    </TableCell>
+                                                                    <TableCell align="right"> 
+                                                                    <Input onChange = {(ev)=>this.change(ev,'editprice')} value = {this.state.editprice}/>
+                                                                    </TableCell>
+                                                                    <TableCell align="right"> <Button onClick = {this.update} color = "primary">Update</Button></TableCell>
+                                                                    <TableCell align="right"> <Button color = "secondary"></Button></TableCell>
+                                                                </TableRow>)
+                                                            }else{
+
+                                                                return( <TableRow key={index2}>
+                                                                <TableCell scope="row">
+                                                                {item2.name} 
+                                                                </TableCell>
+                                                                <TableCell align="right"> {item2.price}</TableCell>
+                                                                <TableCell align="right" onClick = {()=>{this.edit(item2,index2)}}> <Button color = "primary">Edit</Button></TableCell>
+                                                                <TableCell align="right"> <Button color = "secondary">delete</Button></TableCell>
+                                                            </TableRow>
+                                                        )
+                                                    }
                                                         }
                                                     })
                                                 })
                                                 :null}
+                                                    </TableBody>
+                                                </Table>
                                             {this.state.item == value ?
                                                 this.inputs(index)
                                                 : null}
@@ -182,9 +278,9 @@ const mapStateToProps = (state) => {
         data: state.resturents,
     }
 }
-const mapDispatchToProps = {}
+const mapDispatchToProps = { getdata }
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AddItemDailog)
+)(withStyles(Styles)(AddItemDailog))
