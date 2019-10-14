@@ -17,6 +17,7 @@ const Styles = theme => ({
     },
     title: {
         display: 'none',
+
         [theme.breakpoints.up('sm')]: {
             display: 'block',
         },
@@ -80,7 +81,8 @@ class AppBarComponent extends Component {
             modal: false,
             arr: [],
             keys: [],
-            id: ''
+            id: '',
+            data: ""
         }
     }
     signout = () => {
@@ -106,11 +108,16 @@ class AppBarComponent extends Component {
     componentWillReceiveProps() {
         auth.onAuthStateChanged((user) => {
             if (user) {
-                if (this.props.data.user[user.uid].AcceptedOrders) {
+                if (this.props.data.user[user.uid]) {
                     this.setState({
-                        arr: Object.values(this.props.data.user[user.uid].AcceptedOrders),
-                        keys: Object.keys(this.props.data.user[user.uid].AcceptedOrders)
-                    })
+                        data: this.props.data.user[user.uid],
+                    }, () => console.log(this.state.data))
+                    if (this.props.data.user[user.uid].AcceptedOrders) {
+                        this.setState({
+                            arr: Object.values(this.props.data.user[user.uid].AcceptedOrders),
+                            keys: Object.keys(this.props.data.user[user.uid].AcceptedOrders)
+                        })
+                    }
                 }
             }
         })
@@ -135,6 +142,8 @@ class AppBarComponent extends Component {
     content = () => {
         return (
             <div>
+                <p>{this.state.data ? this.state.data.fullname + ' login' : null} </p>
+
                 <p> <Button onClick={this.signout}>
                     Sign Out
                             </Button></p>
@@ -144,13 +153,25 @@ class AppBarComponent extends Component {
             </div>
         )
     };
+    content2 = () => {
+        return (
+            <>
+                <p>{this.state.data ? this.state.data.fullname + ' login' : null} </p>
+                <p> <Button onClick={this.signout}>
+                    Sign Out
+                            </Button></p>
+            </>
+        )
+    };
     render() {
         const { classes } = this.props
 
         return (
             <div>
-                <AppBar position="static">
+
+                <AppBar style={{ backgroundColor: 'black', color: 'white' }} position="static">
                     <Toolbar>
+                        <div className={classes.title}><h2 style={{ color: 'white' }}>Select Resturent</h2></div>
                         <div className={classes.search}>
                             <div className={classes.searchIcon}>
                                 <SearchIcon />
@@ -169,9 +190,13 @@ class AppBarComponent extends Component {
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
                             <Badge className={classes.margin} color='secondary' badgeContent={this.state.arr.length}>
-                                <Button onClick={this.PendingOrder}>Your Pending Orders</Button>
+                                <Button style={{ color: 'white' }} onClick={this.PendingOrder}>Your Pending Orders</Button>
                             </Badge>
-                            <Button onClick={this.signout}>SignOut</Button>
+                            <Popover style={{ zIndex: 8000 }} placement="leftTop" content={this.content2()} trigger="click">
+                                <IconButton edge="end" color="inherit">
+                                    <MoreIcon />
+                                </IconButton>
+                            </Popover>
                         </div>
                         <div className={classes.sectionMobile}>
                             <Popover style={{ zIndex: 8000 }} placement="leftTop" content={this.content()} trigger="click">

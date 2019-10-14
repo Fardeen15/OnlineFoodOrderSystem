@@ -14,7 +14,7 @@ import Menucard from './menucard';
 const Styles = theme => ({
     root: {
         flexGrow: 1,
-        overflowX: 'hidden',
+        // overflowX: 'hidden',
     },
     // webmenu: {
     //     display: 'none',
@@ -75,17 +75,18 @@ class OrderAppBAr extends React.Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <AppBar position="static" color="default">
+                <AppBar position="static" style={{backgroundColor:'black'}} color="black">
                     <Tabs
                         value={this.state.value}
                         onChange={this.handleChange}
-                        indicatorColor="primary"
+                        indicatorColor="white"
+                        
                         textColor="primary"
                         variant="fullWidth"
                         aria-label="full width tabs example"
                     >
-                        <Tab label="Order panel" />
-                        <Tab label="Menu card" />
+                        <Tab style={{color : 'white'}} label="Order panel" />
+                        <Tab style={{color : 'white'}} color = "white" label="Menu card" />
                     </Tabs>
                 </AppBar>
 

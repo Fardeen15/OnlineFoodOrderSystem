@@ -26,7 +26,9 @@ const Styles = theme => ({
     table: {
         minWidth: "100%",
     },
-   
+    btn: {
+        border: '1px solid coral',
+    },
 });
 
 const { Option } = Select;
@@ -161,6 +163,15 @@ class AddItemDailog extends React.Component {
             editval : value
         })
     }
+    delete = (item)=>{
+        auth.onAuthStateChanged((user)=>{
+            if(user){
+                db.ref().child('wholeData').child('resturents').child(user.uid).child('item').child(item.subitem).child(item.name).remove().then(()=>{
+                    this.props.getdata()
+                })
+            }
+        })
+    }
     update = ()=>{
         auth.onAuthStateChanged((user)=>{
             if(user){
@@ -187,7 +198,7 @@ class AddItemDailog extends React.Component {
             <div>
                 <Dialog
                     fullScreen={true}
-                    // fullWidth={true}
+                    style={{ backgroundColor: '#3f51b5' }}
                     open={this.props.open}
                     onClose={this.props.close}
                     aria-labelledby="responsive-dialog-title"
@@ -236,7 +247,7 @@ class AddItemDailog extends React.Component {
                                                                 </TableCell>
                                                                 <TableCell align="right"> {item2.price}</TableCell>
                                                                 <TableCell align="right" onClick = {()=>{this.edit(item2,index2)}}> <Button color = "primary">Edit</Button></TableCell>
-                                                                <TableCell align="right"> <Button color = "secondary">delete</Button></TableCell>
+                                                                <TableCell align="right"> <Button  onClick = {()=>{this.delete(item2)}} color = "secondary">delete</Button></TableCell>
                                                             </TableRow>
                                                         )
                                                     }
@@ -258,11 +269,8 @@ class AddItemDailog extends React.Component {
                             : null}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.props.close} color="primary">
-                            Disagree
-                        </Button>
-                        <Button color="primary" autoFocus>
-                            Add
+                        <Button onClick={this.props.close} className = {classes.btn} color="danger" autoFocus>
+                            ok
                         </Button>
                     </DialogActions>
                 </Dialog>

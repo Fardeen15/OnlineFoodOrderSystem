@@ -34,3 +34,6 @@
   z-index: 8000 !important;
   position: fixed !important;
 }
+.MuiDialog-paperFullScreen{
+  background-color: #3f51b5 !important
+}

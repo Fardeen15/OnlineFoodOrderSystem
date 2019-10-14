@@ -30,9 +30,14 @@ const Styles = theme => ({
     },
     paper: {
         paddingBottom: 50,
+        height: '90vh',
+        backgroundColor: '#3f51b5',
     },
     margin: {
         margin: theme.spacing(2),
+    },
+    btn: {
+        border: '1px solid coral',
     },
     list: {
         marginBottom: theme.spacing(2),
@@ -73,6 +78,9 @@ const Styles = theme => ({
     typography: {
         padding: theme.spacing(2),
     },
+    active: {
+        background: 'linear-gradient(to top left, #ffcc66 -1%, #ff66cc 100%)'
+    }
 })
 
 class Home extends React.Component {
@@ -200,14 +208,14 @@ class Home extends React.Component {
                                     </ListItem>
                                 </React.Fragment>
                             )
-                        }) : <Empty/>}
+                        }) : <Empty />}
                     </List>
                 </Paper>
 
                 <AppBar position="fixed" color="primary" className={classes.appBar1}>
                     <Toolbar>
                         <Badge color="secondary" badgeContent={this.state.data.newOrder ? Object.values(this.state.data.newOrder).length : 0} className={classes.margin}>
-                            <Button onClick={() => { this.setState({ map: "newOrder" }) }}>
+                            <Button className={this.state.map === 'newOrder' ? classes.active : classes.btn} onClick={() => { this.setState({ map: "newOrder" }) }}>
                                 new orders
                         </Button>
                         </Badge>
@@ -216,11 +224,11 @@ class Home extends React.Component {
                         </Fab>
                         <div className={classes.grow} />
                         <Badge color="secondary" badgeContent={this.state.data.pendingOrder ? Object.values(this.state.data.pendingOrder).length : 0} className={classes.margin}>
-                            <Button onClick={() => { this.setState({ map: "pendingOrder" }) }}>
+                            <Button className={this.state.map === 'pendingOrder' ? classes.active : classes.btn} onClick={() => { this.setState({ map: "pendingOrder" }) }}>
                                 pending Orders
                         </Button>
                         </Badge>
-                        <Button onClick={() => { this.setState({ map: "deliveredOrders" }) }}>
+                        <Button className={this.state.map === 'deliveredOrders' ? classes.active : classes.btn} onClick={() => { this.setState({ map: "deliveredOrders" }) }}>
                             Deleverd Orders
                         </Button>
 
@@ -256,7 +264,7 @@ class Home extends React.Component {
                     <MenuDailog open={this.state.menu} close={this.menu} />
                     : null}
                 {this.state.items ?
-                    <AddItemsDailog open={this.state.items} close={this.addItems} />
+                    <AddItemsDailog  open={this.state.items} close={this.addItems} />
                     : null}
                 {this.state.infoDailog ?
                     <Modal

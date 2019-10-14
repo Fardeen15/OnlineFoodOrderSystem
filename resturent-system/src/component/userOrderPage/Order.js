@@ -2,20 +2,31 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
-import { Form, Input, Button, Radio, message } from 'antd';
+import { Form, Input, Button, Radio, message, Empty } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import { auth, db } from '../../firebaseConfige';
+import { auth, db, storage } from '../../firebaseConfige';
 import { datefn } from '../../action';
 const Styles = theme => ({
-    card: {
-        maxWidth: 345,
-    },
+
     OrderForm: {
+        left: "39%",
         [theme.breakpoints.up('sm')]: {
             width: "50%",
             position: "relative",
-            left: "39%",
+            left: "25%",
             transform: "translate(-50%, 10px)",
+        }
+    },
+    imgDiv:{
+        display : 'none',
+        [theme.breakpoints.up('sm')]: {
+            display : 'block',
+        }
+    },
+    mainDiv:{
+        display : 'block',
+        [theme.breakpoints.up('sm')]: {
+            display : 'flex',
         }
     }
 });
@@ -28,7 +39,8 @@ class OrderPage extends React.Component {
             data: "",
             order: "",
             address: "",
-            number: ""
+            number: "",
+            imageurl: ""
         };
     }
     componentWillMount() {
@@ -41,6 +53,8 @@ class OrderPage extends React.Component {
                     console.log(value)
                 }
             })
+        } else {
+            this.props.history.push('/mainpage')
         }
 
     }
@@ -51,9 +65,9 @@ class OrderPage extends React.Component {
         auth.onAuthStateChanged((user) => {
             if (user) {
                 var obj = {
-                    name : this.props.user[user.uid].fullname,
+                    name: this.props.user[user.uid].fullname,
                     id: user.uid,
-                    resturentId : this.state.data.id,
+                    resturentId: this.state.data.id,
                     order: this.state.order,
                     address: this.state.address,
                     number: this.state.number
@@ -70,7 +84,32 @@ class OrderPage extends React.Component {
             }
         })
     }
+    componentDidMount() {
+        console.log(this.props)
+        if (this.props.images) {
+            let { imageurl } = this.state
+            this.props.images.items.forEach(element => {
+                if (this.props.match.params.id === element.name) {
+                    storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
+
+                        this.setState({
+                            imageurl: url
+                        }, () => {
+                            console.log(this.state.imageurl)
+                        })
+
+                    })
+                }
+
+            })
+
+
+        }
+    }
+
     render() {
+        console.log(this.props)
+
         const { formLayout } = this.state;
         const { classes } = this.props;
         const formItemLayout =
@@ -87,7 +126,12 @@ class OrderPage extends React.Component {
                 }
                 : null;
         return (
-            <div>
+            <div className={classes.mainDiv} style={{ display: 'flex', }}>
+                <div className={classes.imgDiv} style={{ width: '44%', }}>
+                    {this.state.imageurl ?
+                        <img style={{ width: '70%', }} src={this.state.imageurl ? this.state.imageurl : null} />
+                        : <Empty description={'no images yet'} />}
+                </div>
                 <Form className={classes.OrderForm} layout={formLayout}>
                     <Form.Item label="Resturant Name" {...formItemLayout}>
                         <Input value={this.props.match.params.id} disabled={true} />
@@ -108,7 +152,7 @@ class OrderPage extends React.Component {
                         <Input value={this.state.data ? this.state.data.cash : ""} disabled={true} />
                     </Form.Item>
                     <Form.Item {...buttonItemLayout}>
-                    <Button onClick={this.addOrder} type="primary" {...formItemLayout}>Submit</Button>  <Button onClick={()=>this.props.history.push('/mainpage')} type="secondary" {...formItemLayout}>cancel</Button>
+                        <Button onClick={this.addOrder} type="primary" {...formItemLayout}>Submit</Button>  <Button onClick={() => this.props.history.push('/mainpage')} type="secondary" {...formItemLayout}>cancel</Button>
                     </Form.Item>
                 </Form>
             </div>
@@ -118,7 +162,8 @@ class OrderPage extends React.Component {
 const mapStateToProps = (state) => {
     return {
         data: state.resturents,
-        user : state.user
+        user: state.user,
+        images: state.ProfileImages
     }
 }
 const mapDispatchToProps = {}
