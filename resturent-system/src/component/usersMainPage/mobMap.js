@@ -93,38 +93,53 @@ class MobMap extends React.Component {
 
     componentWillReceiveProps() {
         if (this.props.images) {
-            let { imageName } = this.state
-            let { imageurl } = this.state
-            this.props.images.items.forEach(element => {
-                if (imageName.length) {
-                    for (var i = 0; i < imageName.length; i++) {
-                        if (imageName[i] !== element.name) {
-                            storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-                                if (imageurl[i] !== url) {
-                                    imageName.push(element.name)
-                                    imageurl.push(url)
-                                }
-                            })
-                            this.setState({
-                                imageName,
-                                imageurl
-                            })
+            this.setState({
+                imageName: [],
+                imageurl: [],
+            }, () => {
+
+                let { imageName } = this.state
+                let { imageurl } = this.state
+                this.props.images.items.forEach((element, index, arr) => {
+                    if (imageName.length) {
+                        console.log('true')
+                        for (var i = 0; i < imageName.length; i++) {
+                            if (imageName[i] !== element.name) {
+                                storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
+                                    if (imageurl[i] !== url) {
+                                        imageName.push(element.name)
+                                        imageurl.push(url)
+                                    }
+                                })
+                                this.setState({
+                                    imageName: imageName,
+                                    imageurl: imageurl
+                                }, () => {
+                                    console.log(imageName, imageurl)
+                                })
+                            }
                         }
-                    }
 
-                } else {
-                    if (!imageName.length) {
-                        storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-                            this.setState({
-                                imageName: [element.name],
-                                imageurl: [url]
-                            }, () => {
+                    } else if (!this.state.imageName.length) {
+                        if(!imageName.length){
+                            storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
+                                imageName.push(element.name)
+                                imageurl.push(url)
+                                this.setState({
+                                    imageName,
+                                    imageurl
+                                }, () => {
+                                    // console.log(this.state.imageName, this.state.imageurl)
+                                })
                             })
-                        })
-                    }
+                        
+                        } 
 
-                }
+
+                    }
+                })
             })
+
         }
     }
     render() {
@@ -213,6 +228,7 @@ class MobMap extends React.Component {
         )
     }
 }
+
 const mapStateToProps = (state) => {
     console.log(state)
     return {

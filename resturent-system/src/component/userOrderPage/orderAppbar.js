@@ -10,6 +10,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Menucard from './menucard';
+import { Badge, Toolbar } from '@material-ui/core';
 
 const Styles = theme => ({
     root: {
@@ -65,38 +66,75 @@ class OrderAppBAr extends React.Component {
     constructor() {
         super()
         this.state = {
-            value: 0
+            value: 0,
+            arr: [],
+            // order: true,
+            menu: true
         }
     }
     handleChange = (event, newValue) => {
         this.setState({ value: newValue });
     };
+    orderObjects = (value) => {
+        var { arr } = this.state
+        arr.push(value)
+        this.setState({
+            arr,
+        })
+    }
+    del = (value) => {
+        var { arr } = this.state
+        arr.splice(value, 1)
+        this.setState({
+            arr,
+        })
+        console.log(arr)
+    }
+    obj = () => {
+        return this.state.arr
+    }
     render() {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <AppBar position="static" style={{backgroundColor:'black'}} color="black">
+                {/* <AppBar position="static" style={{ backgroundColor: 'black' }} color="black">
                     <Tabs
                         value={this.state.value}
                         onChange={this.handleChange}
                         indicatorColor="white"
-                        
+
                         textColor="primary"
                         variant="fullWidth"
                         aria-label="full width tabs example"
                     >
-                        <Tab style={{color : 'white'}} label="Order panel" />
-                        <Tab style={{color : 'white'}} color = "white" label="Menu card" />
+                        <Tab style={{ color: 'white' }} onClick={() => { this.setState({ order: true, menu: false }) }} label={<Badge badgeContent={this.state.arr.length} color="secondary">Order panel</Badge>} />
+                        <Tab style={{ color: 'white' }} onClick={() => { this.setState({ order: false, menu: true }) }} color="white" label="Menu card" />
                     </Tabs>
                 </AppBar>
-
-                <TabPanel value={this.state.value} index={0}>
-                    <Order />
-                </TabPanel>
                 <TabPanel value={this.state.value} index={1}>
-                    <Menucard />
-                </TabPanel>
+                </TabPanel> */}
+                <AppBar style={{ backgroundColor: 'black', color: 'white' }} color="white" position="static">
+                    <Toolbar>
+                        <Typography style={{ color: 'white' }} className={classes.title} variant="h6" noWrap>
+                            {this.props.match.params.id ? this.props.match.params.id : 'helloo'}
+                        </Typography>
+                        <div style={{ color: 'white' }} className={classes.search}>
 
+                        </div>
+                        <div style={{ color: 'white' }} className={classes.grow} />
+                        <div className={classes.sectionDesktop}>
+
+                        </div>
+                        <div style={{ color: 'white' }} className={classes.sectionMobile}>
+                        </div>
+                    </Toolbar>
+                </AppBar>
+                <main>
+                    {this.state.menu?
+                    <Menucard del={this.del} ObjOrder={this.orderObjects} />
+                    :null}
+
+                </main>
             </div>
         )
     }
@@ -108,3 +146,4 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = {}
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(Styles)(withRouter(OrderAppBAr)))
+

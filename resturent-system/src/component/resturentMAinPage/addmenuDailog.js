@@ -8,33 +8,45 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { Select, message } from 'antd';
 import { auth, db } from '../../firebaseConfige';
 import { connect } from 'react-redux'
+import { thisExpression } from '@babel/types';
 
 const { Option } = Select;
 class MenuDailog extends React.Component {
     constructor() {
         super()
         this.state = {
-            val: ""
+            val: []
         }
 
     }
     add = () => {
-        // console.log(this.props.data)
         auth.onAuthStateChanged((user) => {
             if (user) {
                 var data = Object.values(this.props.data)
                 var key = Object.keys(this.props.data)
                 for (var i = 0; i < data.length; i++) {
                     if (key[i] == user.uid) {
-                        if (data[i].subItems) {
-                            data[i].subItems.push(this.state.val)
+                        if (data[i].subItems && this.state.val.length) {
+                            var val = this.state.val
+                            for (var j = 0; j < val.length; j++) {
+                                console.log(val[j])
+                                data[i].subItems.push(val[j])
+                            }
+                            console.log(data[i])
+                            this.setState({
+                                val: []
+                            })
                             db.ref().child('wholeData').child('resturents').child(user.uid).update(data[i]).then(() => {
                                 message.success('your changes is save')
                                 this.props.close()
                             })
                         } else {
-
                             data[i].subItems = this.state.val
+                            // data[i].subItems.push()
+                            console.log(data[i])
+                            this.setState({
+                                val: []
+                            })
                             if (data[i].subItems) {
                                 db.ref().child('wholeData').child('resturents').child(user.uid).update(data[i]).then(() => {
                                     message.success('your changes is save')
@@ -60,7 +72,10 @@ class MenuDailog extends React.Component {
                 >
                     <DialogTitle id="responsive-dialog-title">Add Menu</DialogTitle>
                     <DialogContent>
-                        <Select mode="tags" style={{ width: '97%' }} onChange={(ev) => { this.setState({ val: ev }) }} tokenSeparators={[',']}>
+                        <Select mode="tags" style={{ width: '97%' }} onChange={(ev) => {
+                            console.log(ev)
+                            this.setState({ val: ev })
+                        }} tokenSeparators={[',']}>
                             {/* {children} */}
                         </Select>,
                     </DialogContent>

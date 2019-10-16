@@ -2,31 +2,33 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
-import { Form, Input, Button, Radio, message, Empty } from 'antd';
+import { Form, Input, Button, Radio, message, Empty, Divider } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { auth, db, storage } from '../../firebaseConfige';
 import { datefn } from '../../action';
+import { Dialog , DialogTitle} from '@material-ui/core';
 const Styles = theme => ({
 
     OrderForm: {
-        left: "39%",
+        // left: "39%",
+        width: "100%",
         [theme.breakpoints.up('sm')]: {
-            width: "50%",
-            position: "relative",
-            left: "25%",
-            transform: "translate(-50%, 10px)",
+            width: "77%",
+            // position: "relative",
+            // left: "25%",
+            // transform: "translate(-50%, 10px)",
         }
     },
-    imgDiv:{
-        display : 'none',
+    imgDiv: {
+        display: 'none',
         [theme.breakpoints.up('sm')]: {
-            display : 'block',
+            display: 'block',
         }
     },
-    mainDiv:{
-        display : 'block',
+    mainDiv: {
+        display: 'block',
         [theme.breakpoints.up('sm')]: {
-            display : 'flex',
+            display: 'flex',
         }
     }
 });
@@ -40,7 +42,8 @@ class OrderPage extends React.Component {
             order: "",
             address: "",
             number: "",
-            imageurl: ""
+            imageurl: "",
+            description: false
         };
     }
     componentWillMount() {
@@ -68,7 +71,7 @@ class OrderPage extends React.Component {
                     name: this.props.user[user.uid].fullname,
                     id: user.uid,
                     resturentId: this.state.data.id,
-                    order: this.state.order,
+                    order: this.props.order,
                     address: this.state.address,
                     number: this.state.number
                 }
@@ -106,10 +109,7 @@ class OrderPage extends React.Component {
 
         }
     }
-
     render() {
-        console.log(this.props)
-
         const { formLayout } = this.state;
         const { classes } = this.props;
         const formItemLayout =
@@ -126,36 +126,43 @@ class OrderPage extends React.Component {
                 }
                 : null;
         return (
-            <div className={classes.mainDiv} style={{ display: 'flex', }}>
-                <div className={classes.imgDiv} style={{ width: '44%', }}>
+            <Dialog
+                fullWidth={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                open={this.props.open}>
+                <DialogTitle id="responsive-dialog-title">Order Form</DialogTitle>
+            <Divider/>
+                <div className={classes.mainDiv} style={{ display: 'flex', }}>
+                    {/* <div className={classes.imgDiv} style={{ width: '44%', }}>
                     {this.state.imageurl ?
                         <img style={{ width: '70%', }} src={this.state.imageurl ? this.state.imageurl : null} />
                         : <Empty description={'no images yet'} />}
+                </div> */}
+                    <Form className={classes.OrderForm} layout={formLayout}>
+                        <Form.Item label="Resturant Name" {...formItemLayout}>
+                            <Input value={this.props.match.params.id} disabled={true} />
+                        </Form.Item>
+                        <Form.Item label="Branch Name" {...formItemLayout}>
+                            <Input value={this.state.data ? this.state.data.area + " " + this.state.data.city : ""} disabled={true} />
+                        </Form.Item>
+                        <Form.Item label="Your address" {...formItemLayout}>
+                            <Input value={this.state.address} onChange={(ev) => this.chnage(ev, 'address')} />
+                        </Form.Item>
+                        <Form.Item label="Your Phone Number" {...formItemLayout}>
+                            <Input value={this.state.number} onChange={(ev) => this.chnage(ev, 'number')} />
+                        </Form.Item>
+                        <Form.Item label="Delivery charges" {...formItemLayout}>
+                            <Input value={this.state.data ? this.state.data.cash : ""} disabled={true} />
+                        </Form.Item>
+                        <Form.Item {...buttonItemLayout}>
+                            <Button onClick={this.addOrder} type="primary" {...formItemLayout}>Submit</Button>
+                        </Form.Item>
+                    </Form>
+
                 </div>
-                <Form className={classes.OrderForm} layout={formLayout}>
-                    <Form.Item label="Resturant Name" {...formItemLayout}>
-                        <Input value={this.props.match.params.id} disabled={true} />
-                    </Form.Item>
-                    <Form.Item label="Branch Name" {...formItemLayout}>
-                        <Input value={this.state.data ? this.state.data.area + " " + this.state.data.city : ""} disabled={true} />
-                    </Form.Item>
-                    <Form.Item label="Your Order with (quantity/falvour)" {...formItemLayout}>
-                        <TextArea value={this.state.order} onChange={(ev) => this.chnage(ev, 'order')} />
-                    </Form.Item>
-                    <Form.Item label="Your address" {...formItemLayout}>
-                        <Input value={this.state.address} onChange={(ev) => this.chnage(ev, 'address')} />
-                    </Form.Item>
-                    <Form.Item label="Your Phone Number" {...formItemLayout}>
-                        <Input value={this.state.number} onChange={(ev) => this.chnage(ev, 'number')} />
-                    </Form.Item>
-                    <Form.Item label="Delivery charges" {...formItemLayout}>
-                        <Input value={this.state.data ? this.state.data.cash : ""} disabled={true} />
-                    </Form.Item>
-                    <Form.Item {...buttonItemLayout}>
-                        <Button onClick={this.addOrder} type="primary" {...formItemLayout}>Submit</Button>  <Button onClick={() => this.props.history.push('/mainpage')} type="secondary" {...formItemLayout}>cancel</Button>
-                    </Form.Item>
-                </Form>
-            </div>
+            </Dialog>
+
         )
     }
 }

@@ -9,11 +9,11 @@ import Home from './component/resturentMAinPage/home';
 import Order from './component/userOrderPage/orderAppbar';
 import { getdata } from './action';
 class App extends React.Component {
-  componentDidMount() {
-    if (!this.props.user) {
+  componentWillMount() {
+    // if (!this.props.user) {
       console.log(true)
       this.props.getdata()
-    }
+    // }
   }
   render() {
     return (
