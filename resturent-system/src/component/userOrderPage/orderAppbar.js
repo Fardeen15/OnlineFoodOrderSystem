@@ -11,12 +11,16 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Menucard from './menucard';
 import { Badge, Toolbar } from '@material-ui/core';
-
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 const Styles = theme => ({
     root: {
         flexGrow: 1,
         // overflowX: 'hidden',
     },
+    title:{
+        paddingleft:'10px',
+        paddingRight:'10px',
+    }
     // webmenu: {
     //     display: 'none',
     //     [theme.breakpoints.up('sm')]: {
@@ -116,23 +120,17 @@ class OrderAppBAr extends React.Component {
                 <AppBar style={{ backgroundColor: 'black', color: 'white' }} color="white" position="static">
                     <Toolbar>
                         <Typography style={{ color: 'white' }} className={classes.title} variant="h6" noWrap>
+                            <ArrowBackIosIcon onClick={() => this.props.history.push('/mainpage')} />
+                        </Typography>
+                        <Typography style={{ color: 'white' }} className={classes.title} variant="h6" noWrap>
                             {this.props.match.params.id ? this.props.match.params.id : 'helloo'}
                         </Typography>
-                        <div style={{ color: 'white' }} className={classes.search}>
-
-                        </div>
-                        <div style={{ color: 'white' }} className={classes.grow} />
-                        <div className={classes.sectionDesktop}>
-
-                        </div>
-                        <div style={{ color: 'white' }} className={classes.sectionMobile}>
-                        </div>
                     </Toolbar>
                 </AppBar>
                 <main>
-                    {this.state.menu?
-                    <Menucard del={this.del} ObjOrder={this.orderObjects} />
-                    :null}
+                    {this.state.menu ?
+                        <Menucard del={this.del} ObjOrder={this.orderObjects} />
+                        : null}
 
                 </main>
             </div>

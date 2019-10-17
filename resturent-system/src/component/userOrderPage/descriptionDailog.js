@@ -1,8 +1,5 @@
 import React from 'react';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import { Input, Form ,message } from 'antd';
-import { Button, DialogContent, DialogActions } from '@material-ui/core';
+import { Input, Form, message, Modal } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 class Description extends React.Component {
     constructor() {
@@ -32,37 +29,30 @@ class Description extends React.Component {
                 quantity: "",
                 extra: ""
             })
-        }else{
+        } else {
             message.error('please add quantity')
         }
 
     }
     render() {
         return (
-            <Dialog style={{ padding: "25px" }} maxWidth="md" fullWidth={true} aria-labelledby="simple-dialog-title" open={this.props.open}>
-                <DialogTitle id="simple-dialog-title">Enter Item Detail</DialogTitle>
-                <DialogContent>
-
-                    <Form>
-                        <Form.Item label="Quantity">
-                            <Input value={this.state.quantity} onChange={(ev) => this.change(ev, 'quantity')} />
-                        </Form.Item>
-                        <Form.Item label="Description">
-                            <TextArea value={this.state.extra} onChange={(ev) => this.change(ev, 'extra')} />
-                        </Form.Item>
-                    </Form>
-                </DialogContent>
-                <DialogActions>
-                    <Form.Item>
-                        <Button onClick={() => this.add()}>Add To Cart</Button>
+            <Modal
+                title="Enter Item Detail"
+                visible={this.props.open}
+                onOk={this.add}
+                okText="addTocart"
+                okButtonProps={{ type: "danger" }}
+                onCancel={this.props.close}
+            >
+                <Form>
+                    <Form.Item label="Quantity">
+                        <Input value={this.state.quantity} onChange={(ev) => this.change(ev, 'quantity')} />
                     </Form.Item>
-                    <Form.Item>
-                        <Button onClick={() => this.props.close()}>cancel</Button>
+                    <Form.Item label="Description">
+                        <TextArea value={this.state.extra} onChange={(ev) => this.change(ev, 'extra')} />
                     </Form.Item>
-                </DialogActions>
-
-
-            </Dialog>
+                </Form>
+            </Modal>
         )
 
     }

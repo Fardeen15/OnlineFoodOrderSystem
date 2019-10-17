@@ -17,7 +17,7 @@ import Avatar from '@material-ui/core/Avatar';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/Add';
 import { getdata } from '../../action';
-import { Button, Badge } from '@material-ui/core';
+import { Button, Badge, Table, TableHead, TableCell, TableBody, TableRow } from '@material-ui/core';
 import MenuDailog from './addmenuDailog';
 import { connect } from 'react-redux'
 import { auth, db } from '../../firebaseConfige';
@@ -26,6 +26,7 @@ import AddItemsDailog from './additemsDailog';
 import { Modal } from 'antd';
 const Styles = theme => ({
     text: {
+        color : 'white',
         padding: theme.spacing(2, 2, 0),
     },
     paper: {
@@ -40,6 +41,7 @@ const Styles = theme => ({
         border: '1px solid coral',
     },
     list: {
+        padding: '25px',
         marginBottom: theme.spacing(2),
     },
     subheader: {
@@ -202,11 +204,14 @@ class Home extends React.Component {
                     <List className={classes.list}>
                         {this.state.data[this.state.map] ? Object.values(this.state.data[this.state.map]).map((value, index) => {
                             return (
-                                <React.Fragment key={index}>
-                                    <ListItem onClick={() => { this.setState({ infoDailog: true, key: Object.keys(this.state.data[this.state.map])[index], val: value }) }} button>
-                                        <ListItemText primary={value.name} secondary={value.order} />
-                                    </ListItem>
-                                </React.Fragment>
+                                <Paper>
+
+                                    <React.Fragment key={index}>
+                                        <ListItem onClick={() => { this.setState({ infoDailog: true, key: Object.keys(this.state.data[this.state.map])[index], val: value }) }} button>
+                                            <ListItemText primary={value.name} />
+                                        </ListItem>
+                                    </React.Fragment>
+                                </Paper>
                             )
                         }) : <Empty />}
                     </List>
@@ -264,7 +269,7 @@ class Home extends React.Component {
                     <MenuDailog open={this.state.menu} close={this.menu} />
                     : null}
                 {this.state.items ?
-                    <AddItemsDailog  open={this.state.items} close={this.addItems} />
+                    <AddItemsDailog open={this.state.items} close={this.addItems} />
                     : null}
                 {this.state.infoDailog ?
                     <Modal
@@ -280,7 +285,28 @@ class Home extends React.Component {
                     >
                         <p>Address : {this.state.val.address}</p>
                         <p>Number : {this.state.val.number}</p>
-                        <p>Order : {this.state.val.order}</p>
+                        <h1>order</h1>
+                        <Table>
+                            <TableHead>
+                                <TableCell>Quantity</TableCell>
+                                <TableCell>Item</TableCell>
+                                <TableCell>description</TableCell>
+                            </TableHead>
+                            <TableBody>
+                                {this.state.val.order.length ?
+                                    this.state.val.order.map((value) => {
+                                        return (
+                                            <TableRow>
+                                                <TableCell>{value.description.quantity}</TableCell>
+                                                <TableCell>{value.name}</TableCell>
+                                                <TableCell>{value.description.extra}</TableCell>
+                                            </TableRow>
+                                        )
+                                    })
+                                    : null}
+                            </TableBody>
+                        </Table>
+                        {/* <p>Order : {this.state.val.order}</p> */}
                     </Modal>
                     : null}
             </div>

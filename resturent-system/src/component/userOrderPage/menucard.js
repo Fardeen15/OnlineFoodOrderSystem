@@ -182,7 +182,7 @@ class MenuCard extends React.Component {
             <div className={classes.mainDiv}>
                 <div id="scroll" className={classes.firstDiv}>
                     {this.state.imageurl ?
-                        <img width='100%' src={this.state.imageurl} />
+                        <img height="270" width='100%' src={this.state.imageurl} />
                         : 'hello'}
                     {this.props.data && this.props.match.params.id ?
                         Object.values(this.props.data).map((value) => {

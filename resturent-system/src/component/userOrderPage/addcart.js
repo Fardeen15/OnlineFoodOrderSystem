@@ -11,9 +11,27 @@ const Styles = theme => ({
     paper: {
         height: '92vh',
         padding: '6px',
+        [theme.breakpoints.up('sm')]: {
+            background: 'rgba(0,0,0,0.1)'
+        },
+        background: 'white'
+
+    },
+    mobilebtn: {
+        width: "100%",
+        position: 'fixed',
+        top: "90%",
+        display: 'block',
+        [theme.breakpoints.up('sm')]: {
+            display: 'none',
+        },
     },
     btn: {
-        width: "100%",
+        display: 'none',
+        [theme.breakpoints.up('sm')]: {
+            display: 'block',
+        },
+        width: "30%",
         position: 'fixed',
         top: "90%"
     }
@@ -40,7 +58,7 @@ class AddToCart extends React.Component {
     }
     checkout = () => {
         this.setState({
-            submit: true
+            submit: !this.state.submit
         })
     }
     render() {
@@ -52,7 +70,7 @@ class AddToCart extends React.Component {
                 <Table className={classes.table} size="small">
                     <TableHead>
                         <TableRow>
-                        <TableCell>Quantity</TableCell>
+                            <TableCell>Quantity</TableCell>
                             <TableCell>Dish</TableCell>
                             <TableCell align="right">Price</TableCell>
 
@@ -63,7 +81,7 @@ class AddToCart extends React.Component {
                             {this.props.arr.map((item2, index2) => {
                                 console.log(item2)
                                 return <TableRow key={index2}>
-                                    <TableCell align="right">{item2.description.quantity}</TableCell>                                   
+                                    <TableCell align="right">{item2.description.quantity}</TableCell>
                                     <TableCell scope="row">
                                         {item2.name}
                                     </TableCell>
@@ -71,20 +89,26 @@ class AddToCart extends React.Component {
                                 </TableRow>
                             })}
                         </TableBody>
-                        :null}
+                        : null}
                 </Table>
-                {!this.props.arr.length ? 
-                 <Typography.Text type="secondary" style={{ textAlign: "center" }}>You haven’t added anything to your cart yet! Start adding your favourite dishes</Typography.Text>
-                :null}
+                {!this.props.arr.length ?
+                    <Typography.Text type="secondary" style={{ textAlign: "center" }}>You haven’t added anything to your cart yet! Start adding your favourite dishes</Typography.Text>
+                    : null}
                 <div className={classes.btn}>
                     <Divider />
-                    <Button disabled={!this.props.arr.length ? true:false} style={{width:'100%' , marginTop : '10px'}} variant='contained' color="secondary" onClick={() => {
+                    <Button disabled={!this.props.arr.length ? true : false} style={{ width: '100%', marginTop: '10px' }} variant='contained' color="secondary" onClick={() => {
+                        this.checkout()
+                    }}>Check out</Button>
+                </div>
+                <div className={classes.mobilebtn}>
+                    <Divider />
+                    <Button disabled={!this.props.arr.length ? true : false} style={{ width: '100%', marginTop: '10px' }} variant='contained' color="secondary" onClick={() => {
                         this.checkout()
                     }}>Check out</Button>
                 </div>
             </Paper>
                 {this.state.submit ?
-                    <Order order={this.props.arr} open={this.state.submit} />
+                    <Order close = {this.checkout} order={this.props.arr} open={this.state.submit} />
                     : null}
             </div>
         )

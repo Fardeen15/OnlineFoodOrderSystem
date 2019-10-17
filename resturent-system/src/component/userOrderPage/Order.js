@@ -2,17 +2,17 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
-import { Form, Input, Button, Radio, message, Empty, Divider } from 'antd';
+import { Form, Input, Button, Radio, message, Empty, Divider, Modal } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { auth, db, storage } from '../../firebaseConfige';
 import { datefn } from '../../action';
-import { Dialog , DialogTitle} from '@material-ui/core';
+import { Dialog, DialogTitle } from '@material-ui/core';
 const Styles = theme => ({
 
     OrderForm: {
         // left: "39%",
         width: "100%",
-      
+
         [theme.breakpoints.up('sm')]: {
             width: "77%",
             // position: "relative",
@@ -68,23 +68,29 @@ class OrderPage extends React.Component {
     addOrder = () => {
         auth.onAuthStateChanged((user) => {
             if (user) {
-                var obj = {
-                    name: this.props.user[user.uid].fullname,
-                    id: user.uid,
-                    resturentId: this.state.data.id,
-                    order: this.props.order,
-                    address: this.state.address,
-                    number: this.state.number
-                }
+                if (this.state.number.length == 11) {
 
-                db.ref().child('wholeData').child('resturents').child(this.state.data.id).child('newOrder').child(datefn()).set(obj).then(() => {
-                    message.success('your order send ThankYou!')
-                    this.setState({
-                        order: "",
-                        address: "",
-                        number: ""
+                    var obj = {
+                        name: this.props.user[user.uid].fullname,
+                        id: user.uid,
+                        resturentId: this.state.data.id,
+                        order: this.props.order,
+                        address: this.state.address,
+                        number: this.state.number
+                    }
+
+                    db.ref().child('wholeData').child('resturents').child(this.state.data.id).child('newOrder').child(datefn()).set(obj).then(() => {
+                        message.success('your order send ThankYou!')
+                        this.setState({
+                            order: "",
+                            address: "",
+                            number: ""
+                        })
+                        this.props.history.push('/mainpage')
                     })
-                })
+                }else{
+                    message.error('please check number limit')
+                }
             }
         })
     }
@@ -127,19 +133,14 @@ class OrderPage extends React.Component {
                 }
                 : null;
         return (
-            <Dialog
-                fullWidth={true}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                open={this.props.open}>
-                <DialogTitle id="responsive-dialog-title">Order Form</DialogTitle>
-            <Divider/>
+            <Modal
+                title="Order Form"
+                visible={this.props.open}
+                onOk={this.addOrder}
+                okText="Submit"
+                onCancel={this.props.close}
+            >
                 <div className={classes.mainDiv} style={{ display: 'flex', }}>
-                    {/* <div className={classes.imgDiv} style={{ width: '44%', }}>
-                    {this.state.imageurl ?
-                        <img style={{ width: '70%', }} src={this.state.imageurl ? this.state.imageurl : null} />
-                        : <Empty description={'no images yet'} />}
-                </div> */}
                     <Form className={classes.OrderForm} layout={formLayout}>
                         <Form.Item label="Resturant Name" {...formItemLayout}>
                             <Input value={this.props.match.params.id} disabled={true} />
@@ -156,13 +157,13 @@ class OrderPage extends React.Component {
                         <Form.Item label="Delivery charges" {...formItemLayout}>
                             <Input value={this.state.data ? this.state.data.cash : ""} disabled={true} />
                         </Form.Item>
-                        <Form.Item {...buttonItemLayout}>
-                            <Button onClick={this.addOrder} type="primary" {...formItemLayout}>Submit</Button>
-                        </Form.Item>
+                        {/* <Form.Item {...buttonItemLayout}>
+                            <Button onClick={} type="primary" {...formItemLayout}>Submit</Button>
+                        </Form.Item> */}
                     </Form>
 
                 </div>
-            </Dialog>
+            </Modal>
 
         )
     }

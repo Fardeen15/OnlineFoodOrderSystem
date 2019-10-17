@@ -1,6 +1,6 @@
 import { withStyles, fade } from '@material-ui/core/styles';
 import React, { Component } from 'react';
-import { AppBar, InputBase, IconButton, Toolbar, Button, Badge } from '@material-ui/core';
+import { AppBar, InputBase, IconButton, Toolbar, Button, Badge, TableCell, TableFooter, Table, TableHead, TableBody, TableRow } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import { auth, db } from '../../firebaseConfige';
@@ -215,16 +215,44 @@ class AppBarComponent extends Component {
                         okText={"ok"}
                         cancelText="Decline"
                         onCancel={() => this.setState({ modal: false })}
+
                     >
-                        {
-                            this.state.arr.length ?
-                                this.state.arr.map((value, index) => {
-                                    return (
-                                        <p key={index}> Order : {value.order} <Button onClick={() => this.received(value, index)} color="secondary">Received</Button></p>
-                                    )
-                                })
-                                : <Empty />
+                        {this.state.arr.length ?
+                            this.state.arr.map((value2, index) => {
+                                return (
+                                    <Table>
+                                        <TableHead>
+                                            <TableCell>Quantity</TableCell>
+                                            <TableCell>Item</TableCell>
+                                            <TableCell>description</TableCell>
+                                        </TableHead>
+                                        <TableBody>
+                                            {value2.order.length ?
+                                                value2.order.map((value) => {
+                                                    return (
+
+                                                        <TableRow>
+                                                            <TableCell>{value.description.quantity}</TableCell>
+                                                            <TableCell>{value.name}</TableCell>
+                                                            <TableCell>{value.description.extra}</TableCell>
+                                                        </TableRow>
+                                                    )
+                                                })
+                                                : null}
+                                        </TableBody>
+                                        <TableFooter>
+                                            <TableRow>
+                                                <TableCell>
+                                                    <Button onClick={() => this.received(value2, index)} color="secondary">Received</Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableFooter>
+                                    </Table>
+                                )
+                            })
+                            : <Empty />
                         }
+
                     </Modal>
                     : null}
             </div>

@@ -80,12 +80,12 @@ class UsersMainPage extends React.Component {
                 <AppBarComponent ResturentName={this.state.ResturentName} val={this.change} />
                 <main>
                     <Paper className={classes.paperWeb}>
-                        <div className={classes.rgbaDiv}>
+                        <div id ="scroll" className={classes.rgbaDiv}>
                             <WebMap arr={this.state.arr.length ? this.state.arr : [] } />
                         </div>
                     </Paper>
                     <Paper className={classes.papermob}>
-                        <div className={classes.rgbaDiv}>
+                        <div id ="scroll" className={classes.rgbaDiv}>
                             <MobMap arr={this.state.arr.length ? this.state.arr : [] } />
                         </div>
                     </Paper>

@@ -19,7 +19,15 @@ const Styles = theme => ({
         marginLeft: theme.spacing(2),
         flex: 1,
     },
-
+    displayNone:{
+        display: 'block',
+        [theme.breakpoints.up('sm')]: {
+            display: 'none',
+        },
+        [theme.breakpoints.up('md')]: {
+            display: 'none',
+        }
+    }
 })
 
 class CartModal extends React.Component {
@@ -28,6 +36,7 @@ class CartModal extends React.Component {
         const { classes } = this.props
         return (
 
+                <div className = {classes.displayNone}>
             <Dialog fullScreen open={this.props.open} onClose={this.props.close} TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
                     <Toolbar>
@@ -35,12 +44,13 @@ class CartModal extends React.Component {
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
-                            Sound
+                            Your add To cart Items
             </Typography>
                     </Toolbar>
                 </AppBar>
                 <Addcart arr={this.props.arr} />
             </Dialog>
+                </div>
         )
 
     }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles';
 import { Paper, Button } from '@material-ui/core';
-import { Form, Icon, Input, Checkbox, message } from 'antd';
+import { Form, Icon, Input, Checkbox, message, Alert } from 'antd';
 // import img1 from './backgorund.png'
 import img1 from './img2.jpg'
 import img2 from './logo.png'
@@ -195,6 +195,7 @@ class SignIn extends React.Component {
                         </Paper>
                     </Paper>
                 </Paper>
+                
                 {
                     this.state.signup ?
                         <SignUp close={this.handlechange} open={this.state.signup} />

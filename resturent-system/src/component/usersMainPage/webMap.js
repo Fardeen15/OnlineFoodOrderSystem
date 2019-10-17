@@ -110,175 +110,71 @@ class WebMAp extends React.Component {
         this.props.history.push(`/mainpage/${name}`)
     }
     componentWillMount() {
-        if (!this.props.data) {
-            console.log(true)
-            this.props.getdata()
-        }
-        if (this.props.images) {
-            let { imageName } = this.state
-            let { imageurl } = this.state
-            this.props.images.items.forEach(element => {
-                if (imageName.length) {
-                    for (var i = 0; i < imageName.length; i++) {
-                        if (imageName[i] !== element.name) {
-                            storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-                                if (imageurl[i] !== url) {
-                                    imageName.push(element.name)
-                                    imageurl.push(url)
+        setTimeout(() => {
+
+            if (!this.props.data) {
+                console.log(true)
+                this.props.getdata()
+            }
+            if (this.props.images) {
+                this.setState({
+                    imageName: [],
+                    imageurl: [],
+                }, () => {
+
+                    let { imageName } = this.state
+                    let { imageurl } = this.state
+                    this.props.images.items.forEach(element => {
+                        if (imageName.length) {
+                            console.log('true')
+                            for (var i = 0; i < imageName.length; i++) {
+                                if (imageName[i] !== element.name) {
+                                    storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
+                                        if (imageurl[i] !== url) {
+                                            imageName.push(element.name)
+                                            imageurl.push(url)
+                                        }
+                                    })
+                                    this.setState({
+                                        imageName: imageName,
+                                        imageurl: imageurl
+                                    }, () => {
+                                        console.log(imageName, imageurl)
+                                    })
                                 }
-                            })
-                            this.setState({
-                                imageName,
-                                imageurl
-                            })
-                        }
-                    }
-
-                } else {
-                    // if (!imageName.length) {
-                    storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-                        this.setState({
-                            imageName: [element.name],
-                            imageurl: [url]
-                        }, () => {
-                        })
-                    })
-                    // }
-
-                }
-            })
-        }
-    }
-    componentWillReceiveProps() {
-        if (this.props.images) {
-            this.setState({
-                imageName: [],
-                imageurl: [],
-            }, () => {
-
-                let { imageName } = this.state
-                let { imageurl } = this.state
-                this.props.images.items.forEach(element => {
-                    if (imageName.length) {
-                        console.log('true')
-                        for (var i = 0; i < imageName.length; i++) {
-                            if (imageName[i] !== element.name) {
-                                storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-                                    if (imageurl[i] !== url) {
-                                        imageName.push(element.name)
-                                        imageurl.push(url)
-                                    }
-                                })
-                                this.setState({
-                                    imageName: imageName,
-                                    imageurl: imageurl
-                                }, () => {
-                                    console.log(imageName, imageurl)
-                                })
                             }
-                        }
 
-                    } else if (!this.state.imageName.length) {
-                        storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-                            imageName.push(element.name)
-                            imageurl.push(url)
-                            this.setState({
-                                imageName,
-                                imageurl
-                            }, () => {
-                                console.log(this.state.imageName, this.state.imageurl)
+                        } else if (!this.state.imageName.length) {
+                            storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
+                                imageName.push(element.name)
+                                imageurl.push(url)
+                                this.setState({
+                                    imageName,
+                                    imageurl
+                                }, () => {
+                                    console.log(this.state.imageName, this.state.imageurl)
+                                })
                             })
-                        })
 
 
-                    }
+                        }
+                    })
                 })
-            })
 
-        }
+            } else {
+                console.log(this.props)
+            }
+        }, 3000)
     }
     render() {
         const { classes } = this.props
 
         return (
-            <div className={classes.flexDiv}>
-                {this.props.arr.length ?
-                    this.props.arr.map((value , i) => {
-                        return (
-                            <ButtonBase
-                                onClick={() => this.route(value.ResturentName)}
-                                focusRipple
-                                key={i}
-                                className={classes.image}
-                                focusVisibleClassName={classes.focusVisible}
-                                // className={classes.card}
-                                style={{
-                                    width: '30%',
-                                    marginTop: '12px',
-                                }}
-                            >
-                                {this.state.imageName ?
-                                    this.state.imageName.map((name, index2) => {
-                                        if (name == value.ResturentName) {
-                                            return (
-                                                <span
-                                                    className={classes.imageSrc}
-                                                    style={{
-                                                        backgroundImage: `url(${this.state.imageurl[index2]})`,
-                                                    }}
-                                                />
-                                            )
-                                        }
-                                    }) : null}
+            <div  className={classes.flexDiv}>
+                {this.state.imageName.length ?
 
-                                <span className={classes.imageBackdrop} />
-                                <span className={classes.imageButton}>
-                                    <Typography
-                                        component="span"
-                                        variant="subtitle1"
-                                        color="inherit"
-                                        className={classes.imageTitle}
-                                    >
-                                        {value.ResturentName}
-                                        <span className={classes.imageMarked} />
-                                    </Typography>
-                                </span>
-                            </ButtonBase>
-                            // <Card onClick={() => this.route(value.ResturentName)} className={classes.card}>
-                            //     <CardActionArea>
-                            //         {this.state.imageName ?
-                            //             this.state.imageName.map((name, index2) => {
-                            //                 if (name == value.ResturentName) {
-                            //                     return (
-                            //                         <CardMedia
-                            //                             component="img"
-                            //                             height="280"
-                            //                             image={this.state.imageurl[index2]}
-                            //                         />
-                            //                     )
-                            //                 }
-                            //             }) : null}
-                            //         <CardContent>
-                            //             <Typography gutterBottom variant="h5" component="h2">
-                            //                 {value.ResturentName}
-                            //             </Typography>
-                            //             <Typography variant="body2" color="textSecondary" component="p">
-                            //                 Deliver Charges : {value.cash}
-                            //             </Typography>
-                            //             <Typography color="textSecondary" component="p">
-                            //                 city : {value.city}
-                            //             </Typography>
-                            //             <Typography color="textSecondary" component="p">
-                            //                 area : {value.area}
-                            //             </Typography>
-                            //         </CardContent>
-                            //     </CardActionArea>
-                            // </Card>
-                        )
-                    })
-                    :
-                    this.props.data ?
-                        Object.values(this.props.data).map((value, i) => {
+                    this.props.arr.length ?
+                        this.props.arr.map((value, i) => {
                             return (
                                 <ButtonBase
                                     onClick={() => this.route(value.ResturentName)}
@@ -319,30 +215,58 @@ class WebMAp extends React.Component {
                                         </Typography>
                                     </span>
                                 </ButtonBase>
-                                // <Card className={classes.card}>
-                                //     <div className={classes.details}>
-                                //         <CardContent>
-                                //             <Typography gutterBottom variant="h5" component="h2">
-                                //                 
-                                //             </Typography>
-                                //             <Typography variant="body2" color="textSecondary" component="p">
-                                //                 Deliver Charges : {value.cash}
-                                //             </Typography>
-                                //             <Typography color="textSecondary" component="p">
-                                //                 city : {value.city}
-                                //             </Typography>
-                                //             <Typography color="textSecondary" component="p">
-                                //                 area : {value.area}
-                                //             </Typography>
-                                //         </CardContent>
-                                //     </div>
-
-                                // </Card>
+                                
                             )
-                        }) : null
-                }
+                        })
+                        :
+                        this.props.data ?
+                            Object.values(this.props.data).map((value, i) => {
+                                return (
+                                    <ButtonBase
+                                        onClick={() => this.route(value.ResturentName)}
+                                        focusRipple
+                                        key={i}
+                                        className={classes.image}
+                                        focusVisibleClassName={classes.focusVisible}
+                                        // className={classes.card}
+                                        style={{
+                                            width: '30%',
+                                            marginTop: '12px',
+                                        }}
+                                    >
+                                        {this.state.imageName ?
+                                            this.state.imageName.map((name, index2) => {
+                                                if (name == value.ResturentName) {
+                                                    return (
+                                                        <span
+                                                            className={classes.imageSrc}
+                                                            style={{
+                                                                backgroundImage: `url(${this.state.imageurl[index2]})`,
+                                                            }}
+                                                        />
+                                                    )
+                                                }
+                                            }) : null}
+
+                                        <span className={classes.imageBackdrop} />
+                                        <span className={classes.imageButton}>
+                                            <Typography
+                                                component="span"
+                                                variant="subtitle1"
+                                                color="inherit"
+                                                className={classes.imageTitle}
+                                            >
+                                                {value.ResturentName}
+                                                <span className={classes.imageMarked} />
+                                            </Typography>
+                                        </span>
+                                    </ButtonBase>
+                                )
+                            }) : null
 
 
+
+                    : <Empty />}
             </div>
         )
     }

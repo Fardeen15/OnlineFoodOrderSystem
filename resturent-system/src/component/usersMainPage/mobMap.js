@@ -43,85 +43,53 @@ class MobMap extends React.Component {
             imageName: []
         }
     }
-    componentDidMount() {
-        if (!this.props.data) {
-            console.log(true)
-            this.props.getdata()
-        }
-    }
+    // componentDidMount() {
+    //     if (!this.props.data) {
+    //         console.log(true)
+    //         this.props.getdata()
+    //     }
+    // }
     route = (name) => {
         console.log(this.props.match.params)
         this.props.match.params.id = name
         this.props.history.push(`/mainpage/${name}`)
     }
     componentWillMount() {
-        if (this.props.images) {
-            let { imageName } = this.state
-            let { imageurl } = this.state
-            this.props.images.items.forEach(element => {
-                if (imageName.length) {
-                    for (var i = 0; i < imageName.length; i++) {
-                        if (imageName[i] !== element.name) {
-                            storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-                                if (imageurl[i] !== url) {
-                                    imageName.push(element.name)
-                                    imageurl.push(url)
+        setTimeout(() => {
+
+            if (!this.props.data) {
+                console.log(true)
+                this.props.getdata()
+            }
+            if (this.props.images) {
+                this.setState({
+                    imageName: [],
+                    imageurl: [],
+                }, () => {
+
+                    let { imageName } = this.state
+                    let { imageurl } = this.state
+                    this.props.images.items.forEach(element => {
+                        if (imageName.length) {
+                            console.log('true')
+                            for (var i = 0; i < imageName.length; i++) {
+                                if (imageName[i] !== element.name) {
+                                    storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
+                                        if (imageurl[i] !== url) {
+                                            imageName.push(element.name)
+                                            imageurl.push(url)
+                                        }
+                                    })
+                                    this.setState({
+                                        imageName: imageName,
+                                        imageurl: imageurl
+                                    }, () => {
+                                        console.log(imageName, imageurl)
+                                    })
                                 }
-                            })
-                            this.setState({
-                                imageName,
-                                imageurl
-                            })
-                        }
-                    }
-
-                } else {
-                    if (!imageName.length) {
-                        storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-                            this.setState({
-                                imageName: [element.name],
-                                imageurl: [url]
-                            }, () => {
-                            })
-                        })
-                    }
-
-                }
-            })
-        }
-    }
-
-    componentWillReceiveProps() {
-        if (this.props.images) {
-            this.setState({
-                imageName: [],
-                imageurl: [],
-            }, () => {
-
-                let { imageName } = this.state
-                let { imageurl } = this.state
-                this.props.images.items.forEach((element, index, arr) => {
-                    if (imageName.length) {
-                        console.log('true')
-                        for (var i = 0; i < imageName.length; i++) {
-                            if (imageName[i] !== element.name) {
-                                storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-                                    if (imageurl[i] !== url) {
-                                        imageName.push(element.name)
-                                        imageurl.push(url)
-                                    }
-                                })
-                                this.setState({
-                                    imageName: imageName,
-                                    imageurl: imageurl
-                                }, () => {
-                                    console.log(imageName, imageurl)
-                                })
                             }
-                        }
 
-                    } else if (!this.state.imageName.length) {
-                        if(!imageName.length){
+                        } else if (!this.state.imageName.length) {
                             storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
                                 imageName.push(element.name)
                                 imageurl.push(url)
@@ -129,18 +97,19 @@ class MobMap extends React.Component {
                                     imageName,
                                     imageurl
                                 }, () => {
-                                    // console.log(this.state.imageName, this.state.imageurl)
+                                    console.log(this.state.imageName, this.state.imageurl)
                                 })
                             })
-                        
-                        } 
 
 
-                    }
+                        }
+                    })
                 })
-            })
 
-        }
+            } else {
+                console.log(this.props)
+            }
+        }, 3000)
     }
     render() {
         const { classes } = this.props
