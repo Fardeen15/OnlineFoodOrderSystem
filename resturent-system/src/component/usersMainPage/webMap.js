@@ -114,40 +114,40 @@ class WebMAp extends React.Component {
             console.log(true)
             this.props.getdata()
         }
-        // if (this.props.images) {
-        //     let { imageName } = this.state
-        //     let { imageurl } = this.state
-        //     this.props.images.items.forEach(element => {
-        //         if (imageName.length) {
-        //             for (var i = 0; i < imageName.length; i++) {
-        //                 if (imageName[i] !== element.name) {
-        //                     storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-        //                         if (imageurl[i] !== url) {
-        //                             imageName.push(element.name)
-        //                             imageurl.push(url)
-        //                         }
-        //                     })
-        //                     this.setState({
-        //                         imageName,
-        //                         imageurl
-        //                     })
-        //                 }
-        //             }
+        if (this.props.images) {
+            let { imageName } = this.state
+            let { imageurl } = this.state
+            this.props.images.items.forEach(element => {
+                if (imageName.length) {
+                    for (var i = 0; i < imageName.length; i++) {
+                        if (imageName[i] !== element.name) {
+                            storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
+                                if (imageurl[i] !== url) {
+                                    imageName.push(element.name)
+                                    imageurl.push(url)
+                                }
+                            })
+                            this.setState({
+                                imageName,
+                                imageurl
+                            })
+                        }
+                    }
 
-        //         } else {
-        //             // if (!imageName.length) {
-        //             storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-        //                 this.setState({
-        //                     imageName: [element.name],
-        //                     imageurl: [url]
-        //                 }, () => {
-        //                 })
-        //             })
-        //             // }
+                } else {
+                    // if (!imageName.length) {
+                    storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
+                        this.setState({
+                            imageName: [element.name],
+                            imageurl: [url]
+                        }, () => {
+                        })
+                    })
+                    // }
 
-        //         }
-        //     })
-        // }
+                }
+            })
+        }
     }
     componentWillReceiveProps() {
         if (this.props.images) {

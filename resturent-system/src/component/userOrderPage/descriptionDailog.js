@@ -1,7 +1,7 @@
 import React from 'react';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import { Input, Form } from 'antd';
+import { Input, Form ,message } from 'antd';
 import { Button, DialogContent, DialogActions } from '@material-ui/core';
 import TextArea from 'antd/lib/input/TextArea';
 class Description extends React.Component {
@@ -18,22 +18,28 @@ class Description extends React.Component {
         })
     }
     add = () => {
-        var obj = {
-            quantity: this.state.quantity,
-            extra: this.state.extra
+        if (this.state.quantity) {
+            var data = this.props.data.value
+            var obj = {
+                quantity: this.state.quantity,
+                extra: this.state.extra,
+                totalprice: data.price * this.state.quantity
+            }
+            data.description = obj
+            this.props.addItem(data, this.props.data.index)
+            console.log(data)
+            this.setState({
+                quantity: "",
+                extra: ""
+            })
+        }else{
+            message.error('please add quantity')
         }
-        var data = this.props.data.value
-        data.description = obj
-        this.props.addItem(data, this.props.data.index)
-        console.log(data)
-        this.setState({
-            quantity: "",
-            extra: ""
-        })
+
     }
     render() {
         return (
-            <Dialog style={{ padding: "25px" }} fullWidth={true} aria-labelledby="simple-dialog-title" open={this.props.open}>
+            <Dialog style={{ padding: "25px" }} maxWidth="md" fullWidth={true} aria-labelledby="simple-dialog-title" open={this.props.open}>
                 <DialogTitle id="simple-dialog-title">Enter Item Detail</DialogTitle>
                 <DialogContent>
 
@@ -50,7 +56,9 @@ class Description extends React.Component {
                     <Form.Item>
                         <Button onClick={() => this.add()}>Add To Cart</Button>
                     </Form.Item>
-
+                    <Form.Item>
+                        <Button onClick={() => this.props.close()}>cancel</Button>
+                    </Form.Item>
                 </DialogActions>
 
 

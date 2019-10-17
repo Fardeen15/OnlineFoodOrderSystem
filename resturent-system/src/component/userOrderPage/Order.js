@@ -12,6 +12,7 @@ const Styles = theme => ({
     OrderForm: {
         // left: "39%",
         width: "100%",
+      
         [theme.breakpoints.up('sm')]: {
             width: "77%",
             // position: "relative",

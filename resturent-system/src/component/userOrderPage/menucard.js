@@ -5,6 +5,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
 import Table from '@material-ui/core/Table';
+import Badge from '@material-ui/core/Badge';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -14,7 +15,9 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Description from './descriptionDailog';
 import AddToCart from './addcart';
 import { storage } from '../../firebaseConfige';
-
+import { Button } from '@material-ui/core';
+import CardMembershipIcon from '@material-ui/icons/CardMembership';
+import CartModal from './mobCartDailog';
 const Styles = theme => ({
     root: {
         width: '100%',
@@ -23,9 +26,12 @@ const Styles = theme => ({
         display: 'flex',
     },
     firstDiv: {
-        width: "70%",
         height: "92vh",
         overflowY: 'scroll',
+        width: "100%",
+        [theme.breakpoints.up('sm')]: {
+            width: "70%",
+        }
     },
     paper: {
         marginTop: theme.spacing(3),
@@ -37,8 +43,22 @@ const Styles = theme => ({
         minWidth: "100%",
     },
     secondDiv: {
-        // paddingTop: '26px',
-        width: '30%',
+        display: 'none',
+        [theme.breakpoints.up('sm')]: {
+            width: "30%",
+            display: 'block',
+        }
+
+    },
+    btnDiv: {
+        height: '7vh',
+        width: '100%',
+        position: "fixed",
+        top: "93%",
+        display: 'block',
+        [theme.breakpoints.up('sm')]: {
+            display: 'none',
+        }
     },
     head: {
         backgroundColor: theme.palette.common.black,
@@ -54,12 +74,18 @@ class MenuCard extends React.Component {
             addDescription: false,
             data: "",
             arr: [],
-            imageurl: ""
+            imageurl: "",
+            cart  : false
         }
+    }
+    close2 = ()=>{
+        this.setState({
+            cart : false
+        })
     }
     componentWillReceiveProps() {
         console.log(this.props)
-        
+
     }
     descriptionmodel = (value, index) => {
         var obj = {
@@ -125,6 +151,11 @@ class MenuCard extends React.Component {
                 return <TableCell align="right"><CheckIcon style={{ color: 'green' }} /> <DeleteForeverIcon onClick={() => this.delete(i)} style={{ color: 'red' }} /></TableCell>
             }
         }
+    }
+    close = () => {
+        this.setState({
+            addDescription: false
+        })
     }
     render() {
         if (this.props.images && !this.state.imageurl) {
@@ -200,11 +231,23 @@ class MenuCard extends React.Component {
                         })
                         : null}
                 </div>
+                {this.state.arr.length ?
+                    <div className={classes.btnDiv}>
+                        <Button style={{ width: '100%', height: '7vh' }}
+                            variant="contained"
+                            onClick={()=>this.setState({cart  : true})}
+                            startIcon={<Badge badgeContent={this.state.arr.length}><CardMembershipIcon /></Badge>}
+                            color="secondary">Your Add To cart Items</Button>
+                    </div>
+                    : null}
+                {this.state.cart ? 
+                    <CartModal close = {this.close2} open = {this.state.cart} arr={this.state.arr} />
+                : null}
                 <Paper className={classes.secondDiv}>
-                    <AddToCart arr={this.state.arr} />
+                    <AddToCart  arr={this.state.arr} />
                 </Paper>
                 {this.state.addDescription ?
-                    <Description addItem={this.addItem} data={this.state.data} open={this.state.addDescription} />
+                    <Description close={this.close} addItem={this.addItem} data={this.state.data} open={this.state.addDescription} />
                     : null}
             </div>
         )

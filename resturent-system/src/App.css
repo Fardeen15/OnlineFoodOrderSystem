@@ -40,3 +40,6 @@
 #scroll::-webkit-scrollbar{
   width: 0%;
 }
+.ant-message{
+  z-index: 1900 !important;
+}

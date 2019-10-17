@@ -9,8 +9,13 @@ const Styles = theme => ({
         // overflowX: 'hidden',
     },
     paper: {
-        height: '90vh',
+        height: '92vh',
         padding: '6px',
+    },
+    btn: {
+        width: "100%",
+        position: 'fixed',
+        top: "90%"
     }
     // webmenu: {
     //     display: 'none',
@@ -47,7 +52,8 @@ class AddToCart extends React.Component {
                 <Table className={classes.table} size="small">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Dish (100g serving)</TableCell>
+                        <TableCell>Quantity</TableCell>
+                            <TableCell>Dish</TableCell>
                             <TableCell align="right">Price</TableCell>
 
                         </TableRow>
@@ -57,19 +63,25 @@ class AddToCart extends React.Component {
                             {this.props.arr.map((item2, index2) => {
                                 console.log(item2)
                                 return <TableRow key={index2}>
-                                <TableCell scope="row">
-                                    {item2.name}
-                                </TableCell>
-                                <TableCell align="right">{item2.price}</TableCell>
-                            </TableRow>
+                                    <TableCell align="right">{item2.description.quantity}</TableCell>                                   
+                                    <TableCell scope="row">
+                                        {item2.name}
+                                    </TableCell>
+                                    <TableCell align="right">PKR {item2.description.totalprice}</TableCell>
+                                </TableRow>
                             })}
-                    </TableBody>
-                        : <Typography.Text type="secondary" style={{ textAlign: "center" }}>You haven’t added anything to your cart yet! Start adding your favourite dishes</Typography.Text>}
+                        </TableBody>
+                        :null}
                 </Table>
-                <Divider />
-                <Button color="secondary" onClick={() => {
-                    this.checkout()
-                }}>Check out</Button>
+                {!this.props.arr.length ? 
+                 <Typography.Text type="secondary" style={{ textAlign: "center" }}>You haven’t added anything to your cart yet! Start adding your favourite dishes</Typography.Text>
+                :null}
+                <div className={classes.btn}>
+                    <Divider />
+                    <Button disabled={!this.props.arr.length ? true:false} style={{width:'100%' , marginTop : '10px'}} variant='contained' color="secondary" onClick={() => {
+                        this.checkout()
+                    }}>Check out</Button>
+                </div>
             </Paper>
                 {this.state.submit ?
                     <Order order={this.props.arr} open={this.state.submit} />
