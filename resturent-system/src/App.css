@@ -40,6 +40,96 @@
 #scroll::-webkit-scrollbar{
   width: 0%;
 }
+.scroll::-webkit-scrollbar{
+  width: 0%;
+}
 .ant-message{
   z-index: 1900 !important;
+}
+.ant-tabs-nav .ant-tabs-tab-active {
+  font-weight: 500;
+  color : red !important
+}
+.ant-tabs-ink-bar{
+  background-color: red !important;
+}
+.ant-tabs-tab-prev.ant-tabs-tab-arrow-show, .ant-tabs-tab-next.ant-tabs-tab-arrow-show {
+  color : red !important
+}
+.button-apply {
+  z-index: 1;
+  cursor: pointer;
+  position: relative;
+  font-family: "MuseoSans",Arial,sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  height: 48px;
+  border: 1px solid;
+  border-radius: unset;
+  padding: 0 15px;
+  line-height: 46px;
+  display: inline-block;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  /* color : white */
+}
+@media only screen and  (min-width: 480px) {
+  .text { 
+    flex: 0 1 auto;
+    margin-right: 30px;
+    color: #fff;
+    font-size: 1.6rem !important;
+    line-height: 1.6;
+    font-weight: 700;
+    text-align: left;
+  }
+  .rider-banner {
+    /* display: flex; */
+    align-items: center;
+    width: 100%;
+    padding: 0 30px !important;
+  /* -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center; */
+  justify-content: center;
+  font-size: 1.6rem !important;
+  font-weight: 700;
+  }
+}
+.text{
+  margin-right: 16px;
+  text-align: left;
+  font-size: 1rem;
+    font-weight: 300;
+    color: #fff;
+
+}
+.rider-banner {
+  display: flex;
+  /* -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center; */
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: 300;
+  padding: 10px 40px 10px 16px;
 }

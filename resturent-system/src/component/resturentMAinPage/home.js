@@ -26,7 +26,7 @@ import AddItemsDailog from './additemsDailog';
 import { Modal } from 'antd';
 const Styles = theme => ({
     text: {
-        color : 'white',
+        color: 'white',
         padding: theme.spacing(2, 2, 0),
     },
     paper: {
@@ -179,13 +179,13 @@ class Home extends React.Component {
         auth.onAuthStateChanged((user) => {
             if (user) {
                 db.ref().child('wholeData').child('resturents').child(user.uid).child('pendingOrder').child(this.state.key).set(this.state.val).then(() => {
-                    db.ref().child('wholeData').child('user').child(this.state.val.id).child('AcceptedOrders').child(this.state.key).set(this.state.val).then(() => {
-                        db.ref().child('wholeData').child('resturents').child(user.uid).child('newOrder').child(this.state.key).remove().then(() => {
-                            this.setState({
-                                infoDailog: false
-                            })
+                    // db.ref().child('wholeData').child('user').child(this.state.val.id).child('AcceptedOrders').child(this.state.key).set(this.state.val).then(() => {
+                    db.ref().child('wholeData').child('resturents').child(user.uid).child('newOrder').child(this.state.key).remove().then(() => {
+                        this.setState({
+                            infoDailog: false
                         })
                     })
+                    // })
                 })
             }
         })

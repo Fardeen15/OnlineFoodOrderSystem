@@ -71,24 +71,30 @@ class OrderPage extends React.Component {
                 if (this.state.number.length == 11) {
 
                     var obj = {
+                        entrynumber : datefn(),
                         name: this.props.user[user.uid].fullname,
                         id: user.uid,
+                        resturentName : this.props.match.params.id,
                         resturentId: this.state.data.id,
                         order: this.props.order,
                         address: this.state.address,
                         number: this.state.number
                     }
 
-                    db.ref().child('wholeData').child('resturents').child(this.state.data.id).child('newOrder').child(datefn()).set(obj).then(() => {
-                        message.success('your order send ThankYou!')
-                        this.setState({
-                            order: "",
-                            address: "",
-                            number: ""
+                    db.ref().child('wholeData').child('resturents').child(this.state.data.id).child('newOrder').child(obj.entrynumber).set(obj).then(() => {
+                        db.ref().child('wholeData').child('user').child(user.uid).child('AcceptedOrders').child(obj.entrynumber).set(obj).then(() => {
+                            db.ref().child('wholeData').child('RiderNewOrders').child(obj.entrynumber).set(obj).then(() => {
+                                message.success('your order send ThankYou!')
+                                this.setState({
+                                    order: "",
+                                    address: "",
+                                    number: ""
+                                })
+                                this.props.history.push('/mainpage')
+                            })
                         })
-                        this.props.history.push('/mainpage')
                     })
-                }else{
+                } else {
                     message.error('please check number limit')
                 }
             }

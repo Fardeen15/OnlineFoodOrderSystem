@@ -8,20 +8,22 @@ import UsersMainPage from './component/usersMainPage/users';
 import Home from './component/resturentMAinPage/home';
 import Order from './component/userOrderPage/orderAppbar';
 import { getdata } from './action';
+import RiderHomePage from './component/RiderPages/RiderHomePage';
 class App extends React.Component {
   componentWillMount() {
     // if (!this.props.user) {
-      console.log(true)
-      this.props.getdata()
+    console.log(true)
+    this.props.getdata()
     // }
   }
   render() {
     return (
       <Router>
         <Route exact path="/" render={() => <SignIn />} />
-        <Route exact path="/mainpage" render={() => <UsersMainPage />} />
-        <Route exact path="/Home" render={() => <Home />} />
-        <Route exact path="/mainpage/:id" render={() => <Order />} />
+        <Route path="/mainpage" render={() => <UsersMainPage />} />
+        <Route path="/Home" render={() => <Home />} />
+        <Route path="/Orders" render={() => <RiderHomePage />} />
+        <Route path="/mainpage/:id" render={() => <Order />} />
       </Router>
     )
   }

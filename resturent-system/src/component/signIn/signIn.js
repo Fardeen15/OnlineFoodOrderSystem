@@ -1,6 +1,6 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles';
-import { Paper, Button } from '@material-ui/core';
+import { Paper, Button, Slide } from '@material-ui/core';
 import { Form, Icon, Input, Checkbox, message, Alert } from 'antd';
 // import img1 from './backgorund.png'
 import img1 from './img2.jpg'
@@ -10,6 +10,8 @@ import { auth } from '../../firebaseConfige';
 import { connect } from 'react-redux'
 import { getdata } from '../../action';
 import { withRouter } from 'react-router-dom'
+import MotorcycleIcon from '@material-ui/icons/Motorcycle';
+import RiderSignUp from '../RiderSignUp/RiderSignUp';
 const Styles = theme => ({
     root: {
         padding: theme.spacing(3, 2),
@@ -41,6 +43,32 @@ const Styles = theme => ({
 
         }
     },
+    riderInfoDiv: {
+        [theme.breakpoints.up('sm')]: {
+            padding: "10px",
+            paddingRight: '20px',
+            paddingLeft: '20px',
+            display: 'flex'
+        },
+        justifyContent: 'space-between',
+        position: "absolute",
+        top: "0%",
+        width: "100%",
+        background: 'mediumvioletred',
+        transition: "0.6s ease-in-out"
+    },
+    riderInfoDivfalse: {
+        [theme.breakpoints.up('sm')]: {
+            display: 'flex'
+        },
+        justifyContent: 'space-between',
+        position: "absolute",
+        top: "-15%",
+        width: "100%",
+        background: 'mediumvioletred',
+        transition: "0.6s ease-in-out"
+
+    },
     div2: {
         display: "none",
         [theme.breakpoints.up('sm')]: {
@@ -63,11 +91,11 @@ const Styles = theme => ({
     },
     center: {
         // [theme.breakpoints.up('sm')]: {
-            width: "100%",
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
+        width: "100%",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
         // }
     }
 });
@@ -77,12 +105,20 @@ class SignIn extends React.Component {
         this.state = {
             signup: false,
             email: "",
-            password: ""
+            password: "",
+            select: false,
+            Rider: false
         }
     }
-    handlechange = () => {
+    handlechange = (value) => {
+
         this.setState({
             signup: !this.state.signup
+        })
+    }
+    handlechange2 = () => {
+        this.setState({
+            Rider: !this.state.Rider
         })
     }
     getValue = (ev, name) => {
@@ -104,15 +140,22 @@ class SignIn extends React.Component {
                                     console.log(Object.values(data[i])[j])
                                     if (Object.values(data[i])[j].category == 'user') {
                                         this.props.history.push('/mainpage')
-                                    } else {
+                                        message.success('logIN Succesfully')
+
+                                    } else if (Object.values(data[i])[j].category == 'resturant') {
                                         this.props.history.push('/Home')
+                                        message.success('logIN Succesfully')
+
+                                    } else if (Object.values(data[i])[j].category == 'Rider') {
+                                        this.props.history.push('/Orders')
+                                        message.success('logIN Succesfully')
+
                                     }
                                 }
                             }
                         }
 
                     }
-                    message.success('logIN Succesfully')
                 })
             }).catch((err) => {
                 message.error(err.message)
@@ -136,8 +179,10 @@ class SignIn extends React.Component {
                             console.log(Object.values(data[i])[j])
                             if (Object.values(data[i])[j].category == 'user') {
                                 this.props.history.push('/mainpage')
-                            } else {
+                            } else if (Object.values(data[i])[j].category == 'resturant') {
                                 this.props.history.push('/Home')
+                            } else if (Object.values(data[i])[j].category == 'Rider') {
+                                this.props.history.push('/Orders')
                             }
                         }
                     }
@@ -146,61 +191,91 @@ class SignIn extends React.Component {
             }
         })
     }
-
+    storage = () => {
+        this.setState({ select: true })
+        localStorage.setItem('Rider', this.state.select)
+    }
+    componentWillMount() {
+        var select = localStorage.getItem('Rider')
+        this.setState({
+            select
+        })
+    }
     render() {
 
         const { classes } = this.props
         return (
-            <Paper className={classes.main} style={{ backgroundImage: `url(${img1})` }}>
+            <Paper>
 
-                <Paper className={classes.root}>
-                    <Paper className={classes.div2}>
-                        <Paper className={classes.detail}>
-                            <img style ={{height:'65vh'}} src = {img2}/>
-                        </Paper>
-                    </Paper>
-                    <Paper className={classes.div3}>
-                        <Paper className={classes.form}>
-                            <div className={classes.center}>
-
-                                <h1 style={{ textAlign: 'center' }}>SignIn</h1>
-                                <Form className="login-form">
-                                    <Form.Item>
-                                        <Input
-                                            value={this.state.email}
-                                            onChange={(ev) => { this.getValue(ev, 'email') }}
-                                            prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                            placeholder="email"
-                                        />
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <Input
-                                            value={this.state.password}
-                                            onChange={(ev) => { this.getValue(ev, 'password') }}
-                                            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                            type="password"
-                                            placeholder="Password"
-                                        />
-                                    </Form.Item>
-                                    <Form.Item>
-
-                                        <Button onClick={this.submit} type="primary" htmlType="submit" className="login-form-button">
-                                            Log in
-                                </Button>
-                                        Or <Button color="primary" onClick={this.handlechange}>register now!</Button>
-                                    </Form.Item>
-                                </Form>
-                            </div>
-
-                        </Paper>
-                    </Paper>
+                <Paper className={this.state.select ? classes.riderInfoDivfalse : classes.riderInfoDiv}>
+                    {/* <div style={{ textAlign: 'center' }}>
+                        <h3> <MotorcycleIcon/>YOu want to bussines with us as a Rider <Button variant="outlined" color="inherit" onClick={() => this.setState({ Rider: true })}>Apply Now</Button></h3>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                        
+                        <Button onClick={() => this.storage()}>No</Button>
+                    </div> */}
+                    <div className = "rider-banner">
+                        <div className = "text">Join Our Delevery Team!</div>
+                    <Button className = "button-apply" variant="outlined" color="inherit" onClick={() => this.setState({ Rider: true })}>Apply Now</Button>
+                    </div>
                 </Paper>
-                
-                {
-                    this.state.signup ?
-                        <SignUp close={this.handlechange} open={this.state.signup} />
-                        : null
-                }
+                <Paper className={classes.main} style={{ backgroundImage: `url(${img1})` }}>
+                    <Paper className={classes.root}>
+                        <Paper className={classes.div2}>
+                            <Paper className={classes.detail}>
+                                <img style={{ height: '65vh' }} src={img2} />
+                            </Paper>
+                        </Paper>
+                        <Paper className={classes.div3}>
+                            <Paper className={classes.form}>
+                                <div className={classes.center}>
+                                    <h1 style={{ textAlign: 'center' }}>Online Food Order App</h1>
+                                    <h2 style={{ textAlign: 'center' }}>SignIn</h2>
+                                    <Form className="login-form">
+                                        <Form.Item>
+                                            <Input
+                                                value={this.state.email}
+                                                onChange={(ev) => { this.getValue(ev, 'email') }}
+                                                prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                placeholder="email"
+                                            />
+                                        </Form.Item>
+                                        <Form.Item>
+                                            <Input
+                                                value={this.state.password}
+                                                onChange={(ev) => { this.getValue(ev, 'password') }}
+                                                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                type="password"
+                                                placeholder="Password"
+                                            />
+                                        </Form.Item>
+                                        <Form.Item>
+
+                                            <Button variant="contained" color="primary" onClick={this.submit} type="primary" htmlType="submit" className="login-form-button">
+                                                Log in
+                                </Button>
+                                            Or <Button color="secondary" onClick={this.handlechange}>register now!</Button>
+                                        </Form.Item>
+                                    </Form>
+                                </div>
+
+                            </Paper>
+                        </Paper>
+                    </Paper>
+
+
+                    {
+                        this.state.signup ?
+                            <SignUp close={this.handlechange} open={this.state.signup} />
+                            : null
+                    }
+                    {
+                        this.state.Rider ?
+                            <RiderSignUp close={this.handlechange2} open={this.state.Rider} />
+                            : null
+                    }
+                </Paper>
             </Paper>
 
         )

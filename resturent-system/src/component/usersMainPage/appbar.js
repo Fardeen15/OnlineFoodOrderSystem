@@ -240,13 +240,13 @@ class AppBarComponent extends Component {
                                                 })
                                                 : null}
                                         </TableBody>
-                                        <TableFooter>
+                                        {/* <TableFooter>
                                             <TableRow>
                                                 <TableCell>
                                                     <Button onClick={() => this.received(value2, index)} color="secondary">Received</Button>
                                                 </TableCell>
                                             </TableRow>
-                                        </TableFooter>
+                                        </TableFooter> */}
                                     </Table>
                                 )
                             })

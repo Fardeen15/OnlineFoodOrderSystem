@@ -157,7 +157,7 @@ class ResturentSignUp extends React.Component {
                                 placeholder="Delivery Charges"
                             />
                         </Form.Item>
-                        <Form.Item>
+                        <Form.Item label="enter Resturent Logo / mainImage">
                             <Upload
                                 name="avatar"
                                 listType="picture-card"
@@ -172,7 +172,7 @@ class ResturentSignUp extends React.Component {
                         </Form.Item>
                         <Form.Item>
 
-                            <Button onClick={this.submit} type="primary" htmlType="submit" className="login-form-button">
+                            <Button variant="contained" color="primary" onClick={this.submit} type="primary" htmlType="submit" className="login-form-button">
                                 SignUp
                              </Button>
                         </Form.Item>

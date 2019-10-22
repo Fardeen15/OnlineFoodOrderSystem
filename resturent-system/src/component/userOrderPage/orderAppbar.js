@@ -101,22 +101,6 @@ class OrderAppBAr extends React.Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                {/* <AppBar position="static" style={{ backgroundColor: 'black' }} color="black">
-                    <Tabs
-                        value={this.state.value}
-                        onChange={this.handleChange}
-                        indicatorColor="white"
-
-                        textColor="primary"
-                        variant="fullWidth"
-                        aria-label="full width tabs example"
-                    >
-                        <Tab style={{ color: 'white' }} onClick={() => { this.setState({ order: true, menu: false }) }} label={<Badge badgeContent={this.state.arr.length} color="secondary">Order panel</Badge>} />
-                        <Tab style={{ color: 'white' }} onClick={() => { this.setState({ order: false, menu: true }) }} color="white" label="Menu card" />
-                    </Tabs>
-                </AppBar>
-                <TabPanel value={this.state.value} index={1}>
-                </TabPanel> */}
                 <AppBar style={{ backgroundColor: 'black', color: 'white' }} color="white" position="static">
                     <Toolbar>
                         <Typography style={{ color: 'white' }} className={classes.title} variant="h6" noWrap>
