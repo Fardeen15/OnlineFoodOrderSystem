@@ -10,8 +10,8 @@ class UserSignUp extends React.Component {
         super()
         this.state = {
             Name: "",
-            email: "",
-            password: "",
+            SignUpemail: "",
+            SignUppassword: "",
             number: "",
         }
     }
@@ -21,8 +21,8 @@ class UserSignUp extends React.Component {
         })
     }
     submit = () => {
-        if (this.state.Name && this.state.email && this.state.password) {
-            auth.createUserWithEmailAndPassword(this.state.email, this.state.password).then(() => {
+        if (this.state.Name && this.state.SignUpemail && this.state.SignUppassword) {
+            auth.createUserWithEmailAndPassword(this.state.SignUpemail, this.state.SignUppassword).then(() => {
                 auth.onAuthStateChanged((user) => {
                     if (user) {
                         if (this.state.number.length == 11) {
@@ -30,16 +30,22 @@ class UserSignUp extends React.Component {
                             var obj = {
                                 id: user.uid,
                                 fullname: this.state.Name,
-                                email: this.state.email,
-                                password: this.state.password,
+                                email: this.state.SignUpemail,
+                                password: this.state.SignUppassword,
                                 number: this.state.number,
                                 category: 'user'
                             }
                             db.ref().child('wholeData').child('user').child(user.uid).set(obj).then(() => {
+                                this.setState({
+                                    number : "",
+                                    Name: "",
+                                    SignUpemail: "",
+                                    SignUppassword: "",
+                                })
                                 message.success('your account is created succesfully')
                                 this.props.close()
                                 this.props.close2()
-                                auth.signOut()
+                                // auth.signOut()
                             })
                         }
 
@@ -74,8 +80,8 @@ class UserSignUp extends React.Component {
                         </Form.Item>
                         <Form.Item>
                             <Input
-                                value={this.state.email}
-                                onChange={(ev) => { this.getValue(ev, 'email') }}
+                                value={this.state.SignUpemail}
+                                onChange={(ev) => { this.getValue(ev, 'SignUpemail') }}
                                 prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                 type="email"
                                 placeholder="email"
@@ -83,8 +89,8 @@ class UserSignUp extends React.Component {
                         </Form.Item>
                         <Form.Item>
                             <Input
-                                value={this.state.password}
-                                onChange={(ev) => { this.getValue(ev, 'password') }}
+                                value={this.state.SignUppassword}
+                                onChange={(ev) => { this.getValue(ev, 'SignUppassword') }}
                                 prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                 type="password"
                                 placeholder="Password"

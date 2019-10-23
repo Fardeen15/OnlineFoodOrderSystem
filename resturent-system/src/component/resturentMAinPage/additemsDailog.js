@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import { withStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Select, message } from 'antd';
+import { Select, message, Popconfirm } from 'antd';
 import { auth, db } from '../../firebaseConfige';
 import { connect } from 'react-redux'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -20,7 +20,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { getdata } from '../../action';
-
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 const Styles = theme => ({
     
     table: {
@@ -198,7 +199,7 @@ class AddItemDailog extends React.Component {
             <div>
                 <Dialog
                     fullScreen={true}
-                    style={{ backgroundColor: '#3f51b5' }}
+        // style={{ backgroundColor: '#3f51b5' }}
                     open={this.props.open}
                     onClose={this.props.close}
                     aria-labelledby="responsive-dialog-title"
@@ -213,11 +214,11 @@ class AddItemDailog extends React.Component {
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1d-content" id="panel1d-header">
                                             <Typography>{value}</Typography>
                                         </ExpansionPanelSummary>
-                                        <ExpansionPanelDetails style={{display:'block'}}>
-                                        <Table className={classes.table} size="small">
+                                        <ExpansionPanelDetails style={{display:'block' , overflowX: 'scroll'}}>
+                                        <Table aria-label="a dense table" className={classes.table} size="small">
                                                     <TableHead>
                                                         <TableRow>
-                                                            <TableCell>Dish (100g serving)</TableCell>
+                                                            <TableCell>Dish</TableCell>
                                                             <TableCell align="right">Price</TableCell>
                                                             <TableCell align="right"></TableCell>
                                                             <TableCell align="right"></TableCell>
@@ -246,8 +247,8 @@ class AddItemDailog extends React.Component {
                                                                 {item2.name} 
                                                                 </TableCell>
                                                                 <TableCell align="right"> {item2.price}</TableCell>
-                                                                <TableCell align="right" onClick = {()=>{this.edit(item2,index2)}}> <Button color = "primary">Edit</Button></TableCell>
-                                                                <TableCell align="right"> <Button  onClick = {()=>{this.delete(item2)}} color = "secondary">delete</Button></TableCell>
+                                                                <TableCell align="right" onClick = {()=>{this.edit(item2,index2)}}> <EditIcon/></TableCell>
+                                                                <TableCell align="right"><Popconfirm title="Are You Sure Delete This Task" onConfirm = {()=>{this.delete(item2)}}><DeleteIcon/></Popconfirm> </TableCell>
                                                             </TableRow>
                                                         )
                                                     }

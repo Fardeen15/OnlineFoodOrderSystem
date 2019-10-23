@@ -53,6 +53,15 @@ class RiderSignUp extends React.Component {
                                     }
                                     db.ref().child('wholeData').child('Riders').child(user.uid).set(obj).then(() => {
                                         message.success('your account is created succesfully')
+                                        this.setState ({
+                                            Name :"",
+                                            email :"",
+                                            password :"",
+                                            city :"",
+                                            number :"",
+                                            license :"",
+                                            Age :"",
+                                        })
                                         this.props.close()
                                         auth.signOut()
                                     })

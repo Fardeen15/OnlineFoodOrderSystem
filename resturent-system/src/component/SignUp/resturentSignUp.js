@@ -28,10 +28,11 @@ class ResturentSignUp extends React.Component {
         super()
         this.state = {
             Name: "",
-            email: "",
-            password: "",
+            SignUpemail: "",
+            SignUppassword: "",
             city: "",
             area: "",
+            url : "",
             cash: ""
         }
     }
@@ -40,16 +41,16 @@ class ResturentSignUp extends React.Component {
             [name]: ev.target.value
         })
     }
-    submit = () => {
-        if (this.state.Name && this.state.email && this.state.password && this.state.city && this.state.area && this.state.cash) {
-            auth.createUserWithEmailAndPassword(this.state.email, this.state.password).then(() => {
+    ResSignUp = () => {
+        if (this.state.Name && this.state.SignUpemail && this.state.SignUppassword && this.state.city && this.state.area && this.state.cash) {
+            auth.createUserWithEmailAndPassword(this.state.SignUpemail, this.state.SignUppassword).then(() => {
                 auth.onAuthStateChanged((user) => {
                     if (user) {
                         var obj = {
                             id: user.uid,
                             ResturentName: this.state.Name,
-                            email: this.state.email,
-                            password: this.state.password,
+                            email: this.state.SignUpemail,
+                            password: this.state.SignUppassword,
                             city: this.state.city,
                             area: this.state.area,
                             cash: this.state.cash,
@@ -57,10 +58,21 @@ class ResturentSignUp extends React.Component {
                         }
                         db.ref().child('wholeData').child('resturents').child(user.uid).set(obj).then(() => {
                             storage.ref(`profileImages/${this.state.Name}`).put(this.state.url)
-                            message.success('your account is created succesfully')
-                            this.props.close()
-                            this.props.close2()
-                            auth.signOut()
+                            this.setState({
+                                Name : "",
+                                SignUpemail : "",
+                                url : "",
+                                SignUppassword : "",
+                                city : "",
+                                area : "",
+                                cash : "",
+                            },()=>{
+                                obj = {}
+                                message.success('your account is created succesfully')
+                                this.props.close()
+                                this.props.close2()
+                            })
+                            // auth.signOut()
                         })
                     }
                 })
@@ -81,7 +93,7 @@ class ResturentSignUp extends React.Component {
             getBase64(info.file.originFileObj, imageUrl =>
                 this.setState({
                     imageUrl,
-                    url : info.file.originFileObj,
+                    url: info.file.originFileObj,
                     loading: false,
                 }, () => {
                     console.log(this.state.url)
@@ -117,8 +129,8 @@ class ResturentSignUp extends React.Component {
                         </Form.Item>
                         <Form.Item>
                             <Input
-                                value={this.state.email}
-                                onChange={(ev) => { this.getValue(ev, 'email') }}
+                                value={this.state.SignUpemail}
+                                onChange={(ev) => { this.getValue(ev, 'SignUpemail') }}
                                 prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                 type="email"
                                 placeholder="email"
@@ -126,8 +138,8 @@ class ResturentSignUp extends React.Component {
                         </Form.Item>
                         <Form.Item>
                             <Input
-                                value={this.state.password}
-                                onChange={(ev) => { this.getValue(ev, 'password') }}
+                                value={this.state.SignUppassword}
+                                onChange={(ev) => { this.getValue(ev, 'SignUppassword') }}
                                 prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                 type="password"
                                 placeholder="Password"
@@ -172,7 +184,7 @@ class ResturentSignUp extends React.Component {
                         </Form.Item>
                         <Form.Item>
 
-                            <Button variant="contained" color="primary" onClick={this.submit} type="primary" htmlType="submit" className="login-form-button">
+                            <Button variant="contained" color="primary" onClick={this.ResSignUp} type="primary" htmlType="submit" className="login-form-button">
                                 SignUp
                              </Button>
                         </Form.Item>

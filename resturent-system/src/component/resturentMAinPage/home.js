@@ -32,7 +32,8 @@ const Styles = theme => ({
     paper: {
         paddingBottom: 50,
         height: '90vh',
-        backgroundColor: '#3f51b5',
+        // backgroundColor: '#3f51b5',
+        background: 'linear-gradient(to right, #457fca, #5691c8)'
     },
     margin: {
         margin: theme.spacing(2),
@@ -48,6 +49,7 @@ const Styles = theme => ({
         backgroundColor: theme.palette.background.paper,
     },
     appBar1: {
+        background: 'linear-gradient(to right, #457fca, #5691c8)',
         top: 'auto',
         bottom: 0,
         display: 'none',
@@ -56,6 +58,7 @@ const Styles = theme => ({
         },
     },
     appBar2: {
+        background: 'linear-gradient(to right, #457fca, #5691c8)',
         top: 'auto',
         bottom: 0,
         display: 'block',
@@ -244,7 +247,7 @@ class Home extends React.Component {
                         </Popover>
                     </Toolbar>
                 </AppBar>
-                <AppBar position="fixed" color="primary" className={classes.appBar2}>
+                <AppBar position="fixed"  className={classes.appBar2}>
                     <Toolbar>
                         <Badge color="secondary" badgeContent={this.state.data.newOrder ? Object.values(this.state.data.newOrder).length : 0} className={classes.margin}>
                             <Button onClick={() => { this.setState({ map: "newOrder" }) }}>

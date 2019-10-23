@@ -105,7 +105,7 @@ class AppBarComponent extends Component {
             }
         })
     }
-    componentWillReceiveProps() {
+    componentDidMount() {
         auth.onAuthStateChanged((user) => {
             if (user) {
                 if (this.props.data.user[user.uid]) {

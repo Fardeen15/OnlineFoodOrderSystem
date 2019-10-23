@@ -20,7 +20,7 @@ class App extends React.Component {
     return (
       <Router>
         <Route exact path="/" render={() => <SignIn />} />
-        <Route path="/mainpage" render={() => <UsersMainPage />} />
+        <Route exact path="/mainpage" render={() => <UsersMainPage />} />
         <Route path="/Home" render={() => <Home />} />
         <Route path="/Orders" render={() => <RiderHomePage />} />
         <Route path="/mainpage/:id" render={() => <Order />} />

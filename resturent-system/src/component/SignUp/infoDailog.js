@@ -15,7 +15,10 @@ class SignUp extends React.Component {
         if(email){
             this.setState({ select: email , open : !this.state.open })
         }else{
-            this.setState({ open : !this.state.open })
+            this.setState({ 
+                open : !this.state.open,
+                select : ""
+             })
         }
     }
     render() {

@@ -46,11 +46,12 @@ class PendingOrders extends React.Component {
     booked = () => {
         auth.onAuthStateChanged((user) => {
             if (user) {
+                console.log(this.state.selectedKey)
                 db.ref().child('wholeData').child('Riders').child(user.uid).child('DelevierdOrders').child(this.state.selectedKey).set(this.state.obj).then(() => {
-                    db.ref().child('wholeData').child('Riders').child(user.uid).child('yourPendingOrders').child(this.state.selectedKey).remove().then(() => {
-                        db.ref().child('wholeData').child('resturents').child(this.state.obj.resturentId).child('deliveredOrders').child(this.state.selectedKey).set(this.state.obj).then(() => {
-                            db.ref().child('wholeData').child('resturents').child(this.state.obj.resturentId).child('pendingOrder').child(this.state.selectedKey).remove().then(() => {
-                                db.ref().child('wholeData').child('user').child(this.state.obj.id).child('AcceptedOrders').child(this.state.selectedKey).remove().then(() => {
+                            db.ref().child('wholeData').child('resturents').child(this.state.obj.resturentId).child('deliveredOrders').child(this.state.selectedKey).set(this.state.obj).then(() => {
+                                db.ref().child('wholeData').child('resturents').child(this.state.obj.resturentId).child('pendingOrder').child(this.state.selectedKey).remove().then(() => {
+                                    db.ref().child('wholeData').child('user').child(this.state.obj.id).child('AcceptedOrders').child(this.state.selectedKey).remove().then(() => {
+                                db.ref().child('wholeData').child('Riders').child(user.uid).child('yourPendingOrders').child(this.state.selectedKey).remove().then(() => {
                                     this.setState({
                                         modal: false,
                                         order: "",

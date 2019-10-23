@@ -12,6 +12,7 @@ import { getdata } from '../../action';
 import { withRouter } from 'react-router-dom'
 import MotorcycleIcon from '@material-ui/icons/Motorcycle';
 import RiderSignUp from '../RiderSignUp/RiderSignUp';
+import CloseIcon from '@material-ui/icons/Close';
 const Styles = theme => ({
     root: {
         padding: theme.spacing(3, 2),
@@ -24,11 +25,12 @@ const Styles = theme => ({
         marginLeft: "auto",
         border: "none",
         height: "58vh",
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('lg')]: {
             background: 'transparent',
             boxShadow: 'none',
         },
         [theme.breakpoints.up('sm')]: {
+            background: 'white',
             position: 'relative',
             top: '10%',
             width: "65%",
@@ -126,7 +128,7 @@ class SignIn extends React.Component {
             [name]: ev.target.value
         })
     }
-    submit = () => {
+    SignIN = () => {
         if (this.state.email && this.state.password) {
 
             auth.signInWithEmailAndPassword(this.state.email, this.state.password).then(() => {
@@ -154,7 +156,10 @@ class SignIn extends React.Component {
                                 }
                             }
                         }
-
+                        this.setState({
+                            email: "",
+                            password: ""
+                        })
                     }
                 })
             }).catch((err) => {
@@ -169,120 +174,116 @@ class SignIn extends React.Component {
             }
         })
     }
-    componentWillReceiveProps() {
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                var data = Object.values(this.props.data)
-                for (var i = 0; i < data.length; i++) {
-                    for (var j = 0; j < Object.keys(data[i]).length; j++) {
-                        if (Object.keys(data[i])[j] == user.uid) {
-                            console.log(Object.values(data[i])[j])
-                            if (Object.values(data[i])[j].category == 'user') {
-                                this.props.history.push('/mainpage')
-                            } else if (Object.values(data[i])[j].category == 'resturant') {
-                                this.props.history.push('/Home')
-                            } else if (Object.values(data[i])[j].category == 'Rider') {
-                                this.props.history.push('/Orders')
-                            }
+    componentWillUpdate() {
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            var data = Object.values(this.props.data)
+            for (var i = 0; i < data.length; i++) {
+                for (var j = 0; j < Object.keys(data[i]).length; j++) {
+                    if (Object.keys(data[i])[j] == user.uid) {
+                        console.log(Object.values(data[i])[j])
+                        if (Object.values(data[i])[j].category == 'user') {
+                            this.props.history.push('/mainpage')
+                        } else if (Object.values(data[i])[j].category == 'resturant') {
+                            this.props.history.push('/Home')
+                        } else if (Object.values(data[i])[j].category == 'Rider') {
+                            this.props.history.push('/Orders')
                         }
                     }
                 }
-
             }
-        })
-    }
-    storage = () => {
-        this.setState({ select: true })
-        localStorage.setItem('Rider', this.state.select)
-    }
-    componentWillMount() {
-        var select = localStorage.getItem('Rider')
-        this.setState({
-            select
-        })
-    }
-    render() {
 
-        const { classes } = this.props
-        return (
-            <Paper>
+        }
+    })
+}
+componentWillMount() {
+    var select = localStorage.getItem('Rider')
+    this.setState({
+        select
+    })
+}
+storage = () => {
+    this.setState({ select: true })
+    localStorage.setItem('Rider', this.state.select)
+}
+// componentWillMount() {
 
-                <Paper className={this.state.select ? classes.riderInfoDivfalse : classes.riderInfoDiv}>
-                    {/* <div style={{ textAlign: 'center' }}>
-                        <h3> <MotorcycleIcon/>YOu want to bussines with us as a Rider <Button variant="outlined" color="inherit" onClick={() => this.setState({ Rider: true })}>Apply Now</Button></h3>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                        
-                        <Button onClick={() => this.storage()}>No</Button>
-                    </div> */}
-                    <div className = "rider-banner">
-                        <div className = "text">Join Our Delevery Team!</div>
-                    <Button className = "button-apply" variant="outlined" color="inherit" onClick={() => this.setState({ Rider: true })}>Apply Now</Button>
-                    </div>
-                </Paper>
-                <Paper className={classes.main} style={{ backgroundImage: `url(${img1})` }}>
-                    <Paper className={classes.root}>
-                        <Paper className={classes.div2}>
-                            <Paper className={classes.detail}>
-                                <img style={{ height: '65vh' }} src={img2} />
-                            </Paper>
-                        </Paper>
-                        <Paper className={classes.div3}>
-                            <Paper className={classes.form}>
-                                <div className={classes.center}>
-                                    <h1 style={{ textAlign: 'center' }}>Online Food Order App</h1>
-                                    <h2 style={{ textAlign: 'center' }}>SignIn</h2>
-                                    <Form className="login-form">
-                                        <Form.Item>
-                                            <Input
-                                                value={this.state.email}
-                                                onChange={(ev) => { this.getValue(ev, 'email') }}
-                                                prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                placeholder="email"
-                                            />
-                                        </Form.Item>
-                                        <Form.Item>
-                                            <Input
-                                                value={this.state.password}
-                                                onChange={(ev) => { this.getValue(ev, 'password') }}
-                                                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                type="password"
-                                                placeholder="Password"
-                                            />
-                                        </Form.Item>
-                                        <Form.Item>
+// }
+render() {
 
-                                            <Button variant="contained" color="primary" onClick={this.submit} type="primary" htmlType="submit" className="login-form-button">
-                                                Log in
-                                </Button>
-                                            Or <Button color="secondary" onClick={this.handlechange}>register now!</Button>
-                                        </Form.Item>
-                                    </Form>
-                                </div>
+    const { classes } = this.props
+    return (
+        <Paper>
 
-                            </Paper>
+            <Paper className={this.state.select ? classes.riderInfoDivfalse : classes.riderInfoDiv}>
+                <div className="rider-banner">
+                    <div className="text">Join Our Delevery Team!</div>
+                    <Button className="button-apply" variant="outlined" color="inherit" onClick={() => this.setState({ Rider: true })}>Apply Now</Button>
+                    <CloseIcon className="close-button" onClick={() => this.storage()} />
+                </div>
+            </Paper>
+            <Paper className={classes.main} style={{ backgroundImage: `url(${img1})` }}>
+                <Paper className={classes.root}>
+                    <Paper className={classes.div2}>
+                        <Paper className={classes.detail}>
+                            <img style={{ height: '65vh' }} src={img2} />
                         </Paper>
                     </Paper>
+                    <Paper className={classes.div3}>
+                        <Paper className={classes.form}>
+                            <div className={classes.center}>
+                                <h1 style={{ textAlign: 'center' }}>Online Food Order App</h1>
+                                <h2 style={{ textAlign: 'center' }}>SignIn</h2>
+                                <Form className="login-form">
+                                    <Form.Item>
+                                        <Input
+                                            value={this.state.email}
+                                            onChange={(ev) => { this.getValue(ev, 'email') }}
+                                            prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                            placeholder="email"
+                                        />
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Input.Password
+                                            value={this.state.password}
+                                            onChange={(ev) => { this.getValue(ev, 'password') }}
+                                            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                            type="password"
+                                            placeholder="Password"
+                                        />
+                                    </Form.Item>
+                                    <Form.Item>
 
+                                        <Button variant="contained" color="primary" onClick={this.SignIN} type="primary" htmlType="submit" className="login-form-button">
+                                            Log in
+                                </Button>
+                                        Or <Button color="secondary" onClick={this.handlechange}>register now!</Button>
+                                    </Form.Item>
+                                </Form>
+                            </div>
 
-                    {
-                        this.state.signup ?
-                            <SignUp close={this.handlechange} open={this.state.signup} />
-                            : null
-                    }
-                    {
-                        this.state.Rider ?
-                            <RiderSignUp close={this.handlechange2} open={this.state.Rider} />
-                            : null
-                    }
+                        </Paper>
+                    </Paper>
                 </Paper>
-            </Paper>
 
-        )
-    }
+
+                {
+                    this.state.signup ?
+                        <SignUp close={this.handlechange} open={this.state.signup} />
+                        : null
+                }
+                {
+                    this.state.Rider ?
+                        <RiderSignUp close={this.handlechange2} open={this.state.Rider} />
+                        : null
+                }
+            </Paper>
+        </Paper>
+
+    )
+}
 }
 const mapStateToProps = (state) => {
-    console.log(state)
     return {
         data: state
     }
