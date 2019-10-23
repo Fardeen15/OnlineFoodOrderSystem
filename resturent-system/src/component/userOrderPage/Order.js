@@ -71,10 +71,10 @@ class OrderPage extends React.Component {
                 if (this.state.number.length == 11) {
 
                     var obj = {
-                        entrynumber : datefn(),
+                        entrynumber: datefn(),
                         name: this.props.user[user.uid].fullname,
                         id: user.uid,
-                        resturentName : this.props.match.params.id,
+                        resturentName: this.props.match.params.id,
                         resturentId: this.state.data.id,
                         order: this.props.order,
                         address: this.state.address,
@@ -103,23 +103,15 @@ class OrderPage extends React.Component {
     componentDidMount() {
         console.log(this.props)
         if (this.props.images) {
-            let { imageurl } = this.state
-            this.props.images.items.forEach(element => {
-                if (this.props.match.params.id === element.name) {
-                    storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-
-                        this.setState({
-                            imageurl: url
-                        }, () => {
-                            console.log(this.state.imageurl)
-                        })
-
+            for (var i = 0; i < this.props.images.length; i++) {
+                if (this.props.match.params.id === this.props.imagesName[i]) {
+                    this.setState({
+                        imageurl: this.props.images[i]
+                    }, () => {
+                        console.log(this.state.imageurl)
                     })
                 }
-
-            })
-
-
+            }
         }
     }
     render() {
@@ -178,7 +170,8 @@ const mapStateToProps = (state) => {
     return {
         data: state.resturents,
         user: state.user,
-        images: state.ProfileImages
+        images: state.ProfileImages,
+        imagesName: state.ProfileImagesName
     }
 }
 const mapDispatchToProps = {}

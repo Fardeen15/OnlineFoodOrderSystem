@@ -7,7 +7,17 @@ export function getdata() {
                 db.ref().child('wholeData').on('value', (snap) => {
                     var data = snap.val()
                     storage.ref('profileImages/').listAll().then((res) => {
-                        data.ProfileImages = res
+                        data.ProfileImages = []
+                        data.ProfileImagesName = []
+                        var imageName = data.ProfileImagesName
+                        var imageurl = data.ProfileImages
+                        res.items.forEach(element => {
+                            storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
+                                imageName.push(element.name)
+                                imageurl.push(url)
+
+                            })
+                        })
                         dispatch({
                             type: "get",
                             payload: data

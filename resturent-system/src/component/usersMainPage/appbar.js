@@ -148,7 +148,7 @@ class AppBarComponent extends Component {
                     Sign Out
                             </Button></p>
                 <p> <Button onClick={this.PendingOrder}>
-                    Pending Order
+                    Your Order
                             </Button></p>
             </div>
         )
@@ -190,7 +190,7 @@ class AppBarComponent extends Component {
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
                             <Badge className={classes.margin} color='secondary' badgeContent={this.state.arr.length}>
-                                <Button style={{ color: 'white' }} onClick={this.PendingOrder}>Your Pending Orders</Button>
+                                <Button style={{ color: 'white' }} onClick={this.PendingOrder}>Your orders</Button>
                             </Badge>
                             <Popover style={{ zIndex: 8000 }} placement="leftTop" content={this.content2()} trigger="click">
                                 <IconButton edge="end" color="inherit">

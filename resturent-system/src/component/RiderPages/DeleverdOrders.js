@@ -14,7 +14,8 @@ class PendingOrders extends React.Component {
             modal: false,
             keys: '',
             selectedKey: "",
-            obj: ""
+            obj: "",
+            data : []
         }
     }
     componentWillMount() {
@@ -33,6 +34,7 @@ class PendingOrders extends React.Component {
                         data = Object.values(val)
                         console.log(data)
                         this.setState({
+                            data : data,
                             keys: Object.keys(val)
                         })
                         console.log(this.state.keys)
@@ -182,6 +184,7 @@ class PendingOrders extends React.Component {
         ];
         return (
             <div>
+                
                 <Table pagination={{ pageSize: 20 }} scroll={{ y: 240 }} className={'scroll'} style={{ overflowX: "scroll" }} columns={columns} dataSource={data} />
                 <Modal
                     onOk={() => this.setState({ modal: false })}

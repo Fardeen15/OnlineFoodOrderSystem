@@ -12,9 +12,9 @@ class RidersnewOrder extends React.Component {
             searchText: '',
             order: [],
             modal: false,
-            keys : '',
-            selectedKey : "",
-             obj : ""
+            keys: '',
+            selectedKey: "",
+            obj: ""
         }
     }
     componentWillMount() {
@@ -26,27 +26,27 @@ class RidersnewOrder extends React.Component {
         if (this.props.data.RiderNewOrders !== undefined) {
             data = Object.values(this.props.data.RiderNewOrders)
             this.setState({
-                keys : Object.keys(this.props.data.RiderNewOrders)
+                keys: Object.keys(this.props.data.RiderNewOrders)
             })
             console.log(data)
         }
 
     }
 
-    booked = ()=>{
-        auth.onAuthStateChanged((user)=>{
-            if(user){
-                db.ref().child('wholeData').child('Riders').child(user.uid).child('yourPendingOrders').child(this.state.selectedKey).set(this.state.obj).then(()=>{
-                  db.ref().child('wholeData').child('RiderNewOrders').child(this.state.selectedKey).remove().then(()=>{
-                      this.setState({
-                          modal : false,
-                          order : "",
-                      })
-                  })  
+    booked = () => {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                db.ref().child('wholeData').child('Riders').child(user.uid).child('yourPendingOrders').child(this.state.selectedKey).set(this.state.obj).then(() => {
+                    db.ref().child('wholeData').child('RiderNewOrders').child(this.state.selectedKey).remove().then(() => {
+                        this.setState({
+                            modal: false,
+                            order: "",
+                        })
+                    })
                 })
             }
         })
-        }
+    }
 
     getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -104,9 +104,9 @@ class RidersnewOrder extends React.Component {
         data2 = ord.order
         this.setState({
             order: ord.order,
-            obj : ord,
+            obj: ord,
             modal: true,
-            selectedKey : this.state.keys[i]
+            selectedKey: this.state.keys[i]
         })
     }
     render = () => {
@@ -142,12 +142,12 @@ class RidersnewOrder extends React.Component {
             {
                 title: 'operation',
                 dataIndex: 'operation',
-                render: (text, record , index) => (
+                render: (text, record, index) => (
                     data.length
                         ?
                         data.length >= 1
                             ?
-                            <Button onClick={() => this.view(record ,index)}>view order</Button>
+                            <Button onClick={() => this.view(record, index)}>view order</Button>
                             : null
                         : null
                 ),
@@ -182,7 +182,9 @@ class RidersnewOrder extends React.Component {
         ];
         return (
             <div>
-                <Table className={'scroll'} style={{ overflowX: "scroll" }} columns={columns} dataSource={data} />
+                
+                    <Table className={'scroll'} style={{ overflowX: "scroll" }} columns={columns} dataSource={this.props.data.RiderNewOrders ?Object.values(this.props.data.RiderNewOrders) : []} />
+                    
                 <Modal
                     onOk={() => this.booked()}
                     okText={'booked'}

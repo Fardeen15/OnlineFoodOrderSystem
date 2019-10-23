@@ -14,7 +14,8 @@ class PendingOrders extends React.Component {
             modal: false,
             keys: '',
             selectedKey: "",
-            obj: ""
+            obj: "",
+            data: []
         }
     }
     componentWillMount() {
@@ -25,7 +26,6 @@ class PendingOrders extends React.Component {
     componentWillReceiveProps() {
         auth.onAuthStateChanged((user) => {
             if (user) {
-
                 if (this.props.data.Riders) {
                     var val = this.props.data.Riders[user.uid].yourPendingOrders
                     if (val) {
@@ -33,6 +33,7 @@ class PendingOrders extends React.Component {
                         data = Object.values(val)
                         console.log(data)
                         this.setState({
+                            data: Object.values(val),
                             keys: Object.keys(val)
                         })
                         console.log(this.state.keys)
@@ -48,9 +49,9 @@ class PendingOrders extends React.Component {
             if (user) {
                 console.log(this.state.selectedKey)
                 db.ref().child('wholeData').child('Riders').child(user.uid).child('DelevierdOrders').child(this.state.selectedKey).set(this.state.obj).then(() => {
-                            db.ref().child('wholeData').child('resturents').child(this.state.obj.resturentId).child('deliveredOrders').child(this.state.selectedKey).set(this.state.obj).then(() => {
-                                db.ref().child('wholeData').child('resturents').child(this.state.obj.resturentId).child('pendingOrder').child(this.state.selectedKey).remove().then(() => {
-                                    db.ref().child('wholeData').child('user').child(this.state.obj.id).child('AcceptedOrders').child(this.state.selectedKey).remove().then(() => {
+                    db.ref().child('wholeData').child('resturents').child(this.state.obj.resturentId).child('deliveredOrders').child(this.state.selectedKey).set(this.state.obj).then(() => {
+                        db.ref().child('wholeData').child('resturents').child(this.state.obj.resturentId).child('pendingOrder').child(this.state.selectedKey).remove().then(() => {
+                            db.ref().child('wholeData').child('user').child(this.state.obj.id).child('AcceptedOrders').child(this.state.selectedKey).remove().then(() => {
                                 db.ref().child('wholeData').child('Riders').child(user.uid).child('yourPendingOrders').child(this.state.selectedKey).remove().then(() => {
                                     this.setState({
                                         modal: false,

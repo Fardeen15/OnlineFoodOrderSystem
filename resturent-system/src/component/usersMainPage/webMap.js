@@ -110,67 +110,52 @@ class WebMAp extends React.Component {
         this.props.history.push(`/mainpage/${name}`)
     }
     componentWillMount() {
-        setTimeout(() => {
-
-            if (!this.props.data) {
-                console.log(true)
-                this.props.getdata()
-            }
-            if (this.props.images) {
-                this.setState({
-                    imageName: [],
-                    imageurl: [],
-                }, () => {
-
-                    let { imageName } = this.state
-                    let { imageurl } = this.state
-                    this.props.images.items.forEach(element => {
-                        if (imageName.length) {
-                            console.log('true')
-                            for (var i = 0; i < imageName.length; i++) {
-                                if (imageName[i] !== element.name) {
-                                    storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-                                        if (imageurl[i] !== url) {
-                                            imageName.push(element.name)
-                                            imageurl.push(url)
-                                        }
-                                    })
-                                    this.setState({
-                                        imageName: imageName,
-                                        imageurl: imageurl
-                                    }, () => {
-                                        console.log(imageName, imageurl)
-                                    })
-                                }
-                            }
-
-                        } else if (!this.state.imageName.length) {
-                            storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
-                                imageName.push(element.name)
-                                imageurl.push(url)
-                                this.setState({
-                                    imageName,
-                                    imageurl
-                                }, () => {
-                                    console.log(this.state.imageName, this.state.imageurl)
-                                })
-                            })
-
-
-                        }
+        if (!this.props.data) {
+            console.log(true)
+            this.props.getdata()
+        }
+        if (!this.props.images) {
+            setTimeout(() => {
+                if (this.props.images && this.props.imagesName  && !this.state.imageName.length ) {
+                    this.setState({
+                        imageName: this.props.imagesName,
+                        imageurl: this.props.images,
                     })
+                    console.log(this.props.images)
+                } else {
+                    console.log(this.props.images, this.state.imageName)
+                }
+            }, 5000)
+        }else{
+            if (this.props.images && this.props.imagesName && !this.state.imageName.length) {
+                this.setState({
+                    imageName: this.props.imagesName,
+                    imageurl: this.props.images,
                 })
-
+                console.log(this.props.images)
             } else {
-                console.log(this.props)
+                console.log(this.props.images, this.state.imageName)
             }
-        }, 3000)
+        }
+    }
+    componentWillReceiveProps(){
+        setTimeout(()=>{
+        if (this.props.images && this.props.imagesName ) {
+            this.setState({
+                imageName: this.props.imagesName,
+                imageurl: this.props.images,
+            })
+            console.log(this.props.images)
+        } else {
+                console.log(this.state.imageurl, this.state.imageName)
+            }
+        },2000)
     }
     render() {
         const { classes } = this.props
 
         return (
-            <div  className={classes.flexDiv}>
+            <div className={classes.flexDiv}>
                 {this.state.imageName.length ?
 
                     this.props.arr.length ?
@@ -215,7 +200,7 @@ class WebMAp extends React.Component {
                                         </Typography>
                                     </span>
                                 </ButtonBase>
-                                
+
                             )
                         })
                         :
@@ -266,7 +251,7 @@ class WebMAp extends React.Component {
 
 
 
-                    : 
+                    :
                     <div class="lds-circle"><div></div></div>
                 }
             </div>
@@ -276,7 +261,8 @@ class WebMAp extends React.Component {
 const mapStateToProps = (state) => {
     return {
         data: state.resturents,
-        images: state.ProfileImages
+        images: state.ProfileImages,
+        imagesName: state.ProfileImagesName
     }
 }
 const mapDispatchToProps = { getdata }

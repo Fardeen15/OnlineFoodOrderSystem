@@ -75,17 +75,38 @@ class MenuCard extends React.Component {
             data: "",
             arr: [],
             imageurl: "",
-            cart  : false
+            cart: false
         }
     }
-    close2 = ()=>{
+    close2 = () => {
         this.setState({
-            cart : false
+            cart: false
         })
     }
-    componentWillReceiveProps() {
-        console.log(this.props)
-
+    componentDidMount() {
+        if (!this.props.images) {
+            setTimeout(() => {
+                for (var i = 0; i < this.props.images.length; i++) {
+                    if (this.props.match.params.id === this.props.imagesName[i]) {
+                        this.setState({
+                            imageurl: this.props.images[i]
+                        }, () => {
+                            console.log(this.state.imageurl)
+                        })
+                    }
+                }
+            }, 3000)
+        } else if (this.props.images) {
+            for (var i = 0; i < this.props.images.length; i++) {
+                if (this.props.match.params.id === this.props.imagesName[i]) {
+                    this.setState({
+                        imageurl: this.props.images[i]
+                    }, () => {
+                        console.log(this.state.imageurl)
+                    })
+                }
+            }
+        }
     }
     descriptionmodel = (value, index) => {
         var obj = {
@@ -158,24 +179,24 @@ class MenuCard extends React.Component {
         })
     }
     render() {
-        if (this.props.images && !this.state.imageurl) {
-            this.props.images.items.forEach(element => {
-                if (this.props.match.params.id === element.name) {
-                    storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
+        // if (this.props.images && !this.state.imageurl) {
+        //     this.props.images.items.forEach(element => {
+        //         if (this.props.match.params.id === element.name) {
+        //             storage.refFromURL(element.toString()).getDownloadURL().then((url) => {
 
-                        this.setState({
-                            imageurl: url
-                        }, () => {
-                            console.log(this.state.imageurl)
-                        })
+        //                 this.setState({
+        //                     imageurl: url
+        //                 }, () => {
+        //                     console.log(this.state.imageurl)
+        //                 })
 
-                    })
-                }
+        //             })
+        //         }
 
-            })
+        //     })
 
 
-        }
+        // }
         console.log(this.props)
         const { classes } = this.props
         return (
@@ -235,16 +256,16 @@ class MenuCard extends React.Component {
                     <div className={classes.btnDiv}>
                         <Button style={{ width: '100%', height: '7vh' }}
                             variant="contained"
-                            onClick={()=>this.setState({cart  : true})}
+                            onClick={() => this.setState({ cart: true })}
                             startIcon={<Badge badgeContent={this.state.arr.length}><CardMembershipIcon /></Badge>}
                             color="secondary">Your Add To cart Items</Button>
                     </div>
                     : null}
-                {this.state.cart ? 
-                    <CartModal close = {this.close2} open = {this.state.cart} arr={this.state.arr} />
-                : null}
+                {this.state.cart ?
+                    <CartModal close={this.close2} open={this.state.cart} arr={this.state.arr} />
+                    : null}
                 <Paper className={classes.secondDiv}>
-                    <AddToCart  arr={this.state.arr} />
+                    <AddToCart arr={this.state.arr} />
                 </Paper>
                 {this.state.addDescription ?
                     <Description close={this.close} addItem={this.addItem} data={this.state.data} open={this.state.addDescription} />
@@ -256,7 +277,8 @@ class MenuCard extends React.Component {
 const mapStateToProps = (state) => {
     return {
         data: state.resturents,
-        images: state.ProfileImages
+        images: state.ProfileImages,
+        imagesName: state.ProfileImagesName
     }
 }
 const mapDispatchToProps = {}
