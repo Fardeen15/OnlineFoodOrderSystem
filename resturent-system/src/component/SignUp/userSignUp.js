@@ -13,20 +13,21 @@ class UserSignUp extends React.Component {
             SignUpemail: "",
             SignUppassword: "",
             number: "",
+            SignUpConfopassword: ""
         }
     }
     getValue = (ev, name) => {
         this.setState({
             [name]: ev.target.value
         })
-    }
-    submit = () => {
-        if (this.state.Name && this.state.SignUpemail && this.state.SignUppassword) {
-            auth.createUserWithEmailAndPassword(this.state.SignUpemail, this.state.SignUppassword).then(() => {
-                auth.onAuthStateChanged((user) => {
-                    if (user) {
-                        if (this.state.number.length == 11) {
 
+    }
+    UserSignup = () => {
+        if (this.state.Name && this.state.SignUpemail && this.state.SignUppassword) {
+            if (this.state.number.length == 11) {
+                auth.createUserWithEmailAndPassword(this.state.SignUpemail, this.state.SignUppassword).then(() => {
+                    auth.onAuthStateChanged((user) => {
+                        if (user) {
                             var obj = {
                                 id: user.uid,
                                 fullname: this.state.Name,
@@ -37,23 +38,25 @@ class UserSignUp extends React.Component {
                             }
                             db.ref().child('wholeData').child('user').child(user.uid).set(obj).then(() => {
                                 this.setState({
-                                    number : "",
+                                    number: "",
                                     Name: "",
                                     SignUpemail: "",
+                                    SignUpConfopassword:"",
                                     SignUppassword: "",
                                 })
                                 message.success('your account is created succesfully')
                                 this.props.close()
-                                this.props.close2()
                                 // auth.signOut()
                             })
-                        }
 
-                    }
+                        }
+                    })
+                }).catch((err) => {
+                    message.error(err.message)
                 })
-            }).catch((err) => {
-                message.error(err.message)
-            })
+            } else {
+                message.error('please check number limit')
+            }
         } else {
             message.warning('please filled all fields')
         }
@@ -88,7 +91,7 @@ class UserSignUp extends React.Component {
                             />
                         </Form.Item>
                         <Form.Item>
-                            <Input
+                            <Input.Password
                                 value={this.state.SignUppassword}
                                 onChange={(ev) => { this.getValue(ev, 'SignUppassword') }}
                                 prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -96,7 +99,20 @@ class UserSignUp extends React.Component {
                                 placeholder="Password"
                             />
                         </Form.Item>
-                        <Form.Item>
+                        <Form.Item
+                            help={this.state.SignUppassword == this.state.SignUpConfopassword ? '' : 'please check your password'}
+                            validateStatus={ this.state.SignUppassword == this.state.SignUpConfopassword ? 'success' : 'error'}>
+                            <Input.Password
+                                value={this.state.SignUpConfopassword}
+                                onChange={(ev) => { this.getValue(ev, 'SignUpConfopassword') }}
+                                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                type="password"
+                                placeholder="ConForm Password"
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            help={this.state.number.length > 11 ? 'check number limit' : ''}
+                            validateStatus={this.state.number.length > 11 ? 'error' : 'validating'}>
                             <Input
                                 value={this.state.number}
                                 onChange={(ev) => { this.getValue(ev, 'number') }}
@@ -107,7 +123,7 @@ class UserSignUp extends React.Component {
                         </Form.Item>
                         <Form.Item>
 
-                            <Button onClick={this.submit} type="primary" htmlType="submit" className="login-form-button">
+                            <Button variant="contained" color = "secondary" onClick={this.UserSignup} type="primary" htmlType="submit" className="login-form-button">
                                 SignUp
                              </Button>
                         </Form.Item>

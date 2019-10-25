@@ -1,6 +1,6 @@
 import React from 'react'
 import { Dialog, DialogTitle, Button, DialogContentText, DialogContent, ListItemText, Slide } from '@material-ui/core'
-import { Form, Icon, Input, Checkbox, message, Upload } from 'antd';
+import { Form, Icon, Input, Checkbox, message, Upload, Modal } from 'antd';
 import { auth, db, storage } from '../../firebaseConfige';
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -33,7 +33,8 @@ class ResturentSignUp extends React.Component {
             city: "",
             area: "",
             url : "",
-            cash: ""
+            cash: "",
+            SignUpConfopassword : ""
         }
     }
     getValue = (ev, name) => {
@@ -66,11 +67,11 @@ class ResturentSignUp extends React.Component {
                                 city : "",
                                 area : "",
                                 cash : "",
+                                SignUpConfopassword : ""
                             },()=>{
                                 obj = {}
                                 message.success('your account is created succesfully')
                                 this.props.close()
-                                this.props.close2()
                             })
                             // auth.signOut()
                         })
@@ -102,6 +103,7 @@ class ResturentSignUp extends React.Component {
         }
     };
     render() {
+        console.log(this.props)
         const uploadButton = (
             <div>
                 <Icon type={this.state.loading ? 'loading' : 'plus'} />
@@ -109,15 +111,20 @@ class ResturentSignUp extends React.Component {
             </div>
         );
         return (
-            <Dialog TransitionComponent={Transition}
-                keepMounted
-                maxWidth="sm"
-                fullWidth={true}
-                onClose={this.props.close}
-                aria-labelledby="form-dialog-title"
-                open={this.props.open}>
-                <DialogTitle style={{ textAlign: "center" }} id="simple-dialog-title">account SignUP Form</DialogTitle>
-                <DialogContent>
+            <Modal 
+            // TransitionComponent={Transition}
+                // keepMounted
+                // maxWidth="sm"
+                // fullWidth={true}
+                cancelButtonProps={{type:"danger"}}
+                title = "account SignUP Form"
+                onCancel={this.props.close}
+                okButtonProps={{style:{display:'none'}}}
+                // aria-labelledby="form-dialog-title"
+                visible={this.props.open}
+                >
+                {/* <DialogTitle style={{ textAlign: "center" }} id="simple-dialog-title"></DialogTitle>
+                <DialogContent> */}
                     <Form className="login-form">
                         <Form.Item>
                             <Input
@@ -137,12 +144,23 @@ class ResturentSignUp extends React.Component {
                             />
                         </Form.Item>
                         <Form.Item>
-                            <Input
+                            <Input.Password
                                 value={this.state.SignUppassword}
                                 onChange={(ev) => { this.getValue(ev, 'SignUppassword') }}
                                 prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                 type="password"
                                 placeholder="Password"
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            help={this.state.SignUppassword == this.state.SignUpConfopassword ? '' : 'please check your password'}
+                            validateStatus={ this.state.SignUppassword == this.state.SignUpConfopassword ? 'success' : 'error'}>
+                            <Input.Password
+                                value={this.state.SignUpConfopassword}
+                                onChange={(ev) => { this.getValue(ev, 'SignUpConfopassword') }}
+                                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                type="password"
+                                placeholder="ConForm Password"
                             />
                         </Form.Item>
                         <Form.Item>
@@ -191,8 +209,8 @@ class ResturentSignUp extends React.Component {
 
                     </Form>
 
-                </DialogContent>
-            </Dialog>
+                {/* </DialogContent> */}
+            </Modal>
         )
     }
 }

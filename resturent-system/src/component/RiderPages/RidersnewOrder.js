@@ -14,7 +14,8 @@ class RidersnewOrder extends React.Component {
             modal: false,
             keys: '',
             selectedKey: "",
-            obj: ""
+            obj: "",
+            data : ""
         }
     }
     componentWillMount() {
@@ -26,6 +27,7 @@ class RidersnewOrder extends React.Component {
         if (this.props.data.RiderNewOrders !== undefined) {
             data = Object.values(this.props.data.RiderNewOrders)
             this.setState({
+                data,
                 keys: Object.keys(this.props.data.RiderNewOrders)
             })
             console.log(data)
@@ -183,7 +185,13 @@ class RidersnewOrder extends React.Component {
         return (
             <div>
                 
-                    <Table className={'scroll'} style={{ overflowX: "scroll" }} columns={columns} dataSource={this.props.data.RiderNewOrders ?Object.values(this.props.data.RiderNewOrders) : []} />
+                    <Table 
+                     pagination={{ pageSize: 20 }} 
+                     scroll={{ y: 900 }} 
+                    className={'scroll'} 
+                    style={{ overflowX: "scroll" }} 
+                    columns={columns} 
+                    dataSource={this.props.data.RiderNewOrders ?Object.values(this.props.data.RiderNewOrders) : []} />
                     
                 <Modal
                     onOk={() => this.booked()}

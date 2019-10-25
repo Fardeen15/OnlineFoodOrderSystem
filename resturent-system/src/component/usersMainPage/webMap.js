@@ -116,7 +116,7 @@ class WebMAp extends React.Component {
         }
         if (!this.props.images) {
             setTimeout(() => {
-                if (this.props.images && this.props.imagesName  && !this.state.imageName.length ) {
+                if (this.props.images && this.props.imagesName && !this.state.imageName.length) {
                     this.setState({
                         imageName: this.props.imagesName,
                         imageurl: this.props.images,
@@ -126,7 +126,7 @@ class WebMAp extends React.Component {
                     console.log(this.props.images, this.state.imageName)
                 }
             }, 5000)
-        }else{
+        } else {
             if (this.props.images && this.props.imagesName && !this.state.imageName.length) {
                 this.setState({
                     imageName: this.props.imagesName,
@@ -138,18 +138,18 @@ class WebMAp extends React.Component {
             }
         }
     }
-    componentWillReceiveProps(){
-        setTimeout(()=>{
-        if (this.props.images && this.props.imagesName ) {
-            this.setState({
-                imageName: this.props.imagesName,
-                imageurl: this.props.images,
-            })
-            console.log(this.props.images)
-        } else {
+    componentWillReceiveProps() {
+        setTimeout(() => {
+            if (this.props.images && this.props.imagesName) {
+                this.setState({
+                    imageName: this.props.imagesName,
+                    imageurl: this.props.images,
+                })
+                console.log(this.props.images)
+            } else {
                 console.log(this.state.imageurl, this.state.imageName)
             }
-        },2000)
+        }, 2000)
     }
     render() {
         const { classes } = this.props

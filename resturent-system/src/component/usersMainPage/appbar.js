@@ -5,7 +5,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import { auth, db } from '../../firebaseConfige';
 import { withRouter } from 'react-router-dom'
-import { Modal, message, Empty, Popover } from 'antd';
+import { Modal, message, Empty, Popover, Rate } from 'antd';
 import { connect } from 'react-redux'
 
 const Styles = theme => ({
@@ -82,7 +82,10 @@ class AppBarComponent extends Component {
             arr: [],
             keys: [],
             id: '',
-            data: ""
+            data: "",
+            value: "",
+            open: false,
+            name : ""
         }
     }
     signout = () => {
@@ -119,8 +122,24 @@ class AppBarComponent extends Component {
                         })
                     }
                 }
+
             }
         })
+    }
+    componentWillReceiveProps() {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                if (this.props.data.user[user.uid][5 + 'StarsRating']) {
+                    console.log('hello')
+                    this.setState({
+                        open: true,
+                        name : this.props.data.user[user.uid][5 + 'StarsRating']
+                    })
+                } else {
+                    console.log('sorry')
+                }
+            }
+            })
     }
     received = (value, index) => {
         console.log(this.state.keys[index], value)
@@ -163,12 +182,41 @@ class AppBarComponent extends Component {
             </>
         )
     };
+    ok = ()=>{
+        auth.onAuthStateChanged((user)=>{
+            if(user){
+                db.ref('wholeData').child('user').child(user.uid).child('5StarsRating').remove().then(()=>{
+                    this.setState({
+                        open : false
+                    })
+                    message.success('Thank You!')
+                })
+            }
+        })
+    }
+    handleChange = value => {
+        this.setState({ value });
+    };
     render() {
         const { classes } = this.props
-
+        const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
         return (
             <div>
-
+                {/* {this.state.data[5 + 'StarsRating'] ? */}
+                    <Modal
+                        visible={this.state.open}
+                        cancelButtonProps={{style : {display : 'none'}}}
+                        okText = "submit"
+                        onOk = {this.ok}
+                    >
+                        <h3>your last orderer Deleviry Rider name is {this.state.name}</h3>
+                        <h4>please rate This Rider</h4>
+                        <span>
+                            <Rate tooltips={desc} onChange={this.handleChange} value={this.state.value} />
+                            {this.state.value ? <span className="ant-rate-text">{desc[this.state.value - 1]}</span> : ''}
+                        </span>
+                    </Modal>
+                    {/* : null} */}
                 <AppBar style={{ backgroundColor: 'black', color: 'white' }} position="static">
                     <Toolbar>
                         <div className={classes.title}><h2 style={{ color: 'white' }}>Select Resturent</h2></div>

@@ -53,14 +53,14 @@ class RiderSignUp extends React.Component {
                                     }
                                     db.ref().child('wholeData').child('Riders').child(user.uid).set(obj).then(() => {
                                         message.success('your account is created succesfully')
-                                        this.setState ({
-                                            Name :"",
-                                            email :"",
-                                            password :"",
-                                            city :"",
-                                            number :"",
-                                            license :"",
-                                            Age :"",
+                                        this.setState({
+                                            Name: "",
+                                            email: "",
+                                            password: "",
+                                            city: "",
+                                            number: "",
+                                            license: "",
+                                            Age: "",
                                         })
                                         this.props.close()
                                         auth.signOut()
@@ -74,7 +74,7 @@ class RiderSignUp extends React.Component {
                         message.error('Please check numbwer limit')
                     }
                 }
-            }else{
+            } else {
                 message.error('Sorry License is Required ')
             }
         } else {
@@ -126,11 +126,11 @@ class RiderSignUp extends React.Component {
                     </Form.Item>
                     <Form.Item>
                         <Input
-                            type="number"
                             value={this.state.number}
                             onChange={(ev) => { this.getValue(ev, 'number') }}
-                            prefix={<Icon type="flag" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                            placeholder="Enter yor cell Number"
+                            prefix={<Icon type="hash" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                            type="number"
+                            placeholder="number"
                         />
                     </Form.Item>
                     <Form.Item label="Do You Have A Driving license">

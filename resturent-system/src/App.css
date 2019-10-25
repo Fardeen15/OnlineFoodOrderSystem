@@ -1,3 +1,6 @@
+body{
+  background-color: whitesmoke;
+}
 .login-form {
   max-width: 300px;
   margin: auto !important
@@ -27,7 +30,7 @@
 /* .ant-select-dropdown-hidden{
   z-index: 8000 !important;
 } */
-.ant-select-dropdown{
+.ant-select-dropdown , .ant-tooltip{
   z-index: 8000 !important;
 }
 .ant-popover, .ant-popover-placement-left, .ant-popover-placement-leftTop, .ant-popover-placement-leftBottom {

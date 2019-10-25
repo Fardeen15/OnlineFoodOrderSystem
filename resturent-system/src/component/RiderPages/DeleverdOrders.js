@@ -26,11 +26,9 @@ class PendingOrders extends React.Component {
     componentWillReceiveProps() {
         auth.onAuthStateChanged((user) => {
             if (user) {
-
                 if (this.props.data.Riders) {
                     var val = this.props.data.Riders[user.uid].DelevierdOrders
                     if (val) {
-
                         data = Object.values(val)
                         console.log(data)
                         this.setState({
@@ -185,7 +183,11 @@ class PendingOrders extends React.Component {
         return (
             <div>
                 
-                <Table pagination={{ pageSize: 20 }} scroll={{ y: 240 }} className={'scroll'} style={{ overflowX: "scroll" }} columns={columns} dataSource={data} />
+                <Table 
+                pagination={{ pageSize: 20 }} 
+                scroll={{ y: 900 }} 
+                className={'scroll'} style={{ overflowX: "scroll" }} 
+                columns={columns} dataSource={data} />
                 <Modal
                     onOk={() => this.setState({ modal: false })}
                     okButtonProps={{ type: 'danger' }}

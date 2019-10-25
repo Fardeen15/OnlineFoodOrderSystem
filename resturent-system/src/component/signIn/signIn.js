@@ -13,6 +13,9 @@ import { withRouter } from 'react-router-dom'
 import MotorcycleIcon from '@material-ui/icons/Motorcycle';
 import RiderSignUp from '../RiderSignUp/RiderSignUp';
 import CloseIcon from '@material-ui/icons/Close';
+import Div2 from './Div2';
+import ResturentSignUp from '../SignUp/resturentSignUp';
+import UserSignUp from '../SignUp/userSignUp';
 const Styles = theme => ({
     root: {
         padding: theme.spacing(3, 2),
@@ -39,7 +42,7 @@ const Styles = theme => ({
     div3: {
         width: "100%",
         border: "none",
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('md')]: {
             width: "50%",
             backgroundColor: 'transparent',
 
@@ -73,7 +76,7 @@ const Styles = theme => ({
     },
     div2: {
         display: "none",
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('md')]: {
             display: 'block',
             width: "50%",
             backgroundColor: 'transparent'
@@ -109,14 +112,23 @@ class SignIn extends React.Component {
             email: "",
             password: "",
             select: false,
-            Rider: false
+            Rider: false,
+            selectedSignUp: ""
         }
     }
     handlechange = (value) => {
-
-        this.setState({
-            signup: !this.state.signup
-        })
+        if (value === 'user' || value === 'Resturent' ) {
+            console.log(value)
+            this.setState({
+                signup: !this.state.signup,
+                selectedSignUp: value
+            })
+        } else {
+            this.setState({
+                signup: !this.state.signup,
+                selectedSignUp: ""
+            })
+        }
     }
     handlechange2 = () => {
         this.setState({
@@ -175,113 +187,120 @@ class SignIn extends React.Component {
         })
     }
     componentWillUpdate() {
-    auth.onAuthStateChanged((user) => {
-        if (user) {
-            var data = Object.values(this.props.data)
-            for (var i = 0; i < data.length; i++) {
-                for (var j = 0; j < Object.keys(data[i]).length; j++) {
-                    if (Object.keys(data[i])[j] == user.uid) {
-                        console.log(Object.values(data[i])[j])
-                        if (Object.values(data[i])[j].category == 'user') {
-                            this.props.history.push('/mainpage')
-                        } else if (Object.values(data[i])[j].category == 'resturant') {
-                            this.props.history.push('/Home')
-                        } else if (Object.values(data[i])[j].category == 'Rider') {
-                            this.props.history.push('/Orders')
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                var data = Object.values(this.props.data)
+                for (var i = 0; i < data.length; i++) {
+                    for (var j = 0; j < Object.keys(data[i]).length; j++) {
+                        if (Object.keys(data[i])[j] == user.uid) {
+                            console.log(Object.values(data[i])[j])
+                            if (Object.values(data[i])[j].category == 'user') {
+                                this.props.history.push('/mainpage')
+                            } else if (Object.values(data[i])[j].category == 'resturant') {
+                                this.props.history.push('/Home')
+                            } else if (Object.values(data[i])[j].category == 'Rider') {
+                                this.props.history.push('/Orders')
+                            }
                         }
                     }
                 }
+
             }
+        })
+    }
+    componentWillMount() {
+        var select = localStorage.getItem('Rider')
+        this.setState({
+            select
+        })
+    }
+    storage = () => {
+        this.setState({ select: true })
+        localStorage.setItem('Rider', this.state.select)
+    }
+    // componentWillMount() {
 
-        }
-    })
-}
-componentWillMount() {
-    var select = localStorage.getItem('Rider')
-    this.setState({
-        select
-    })
-}
-storage = () => {
-    this.setState({ select: true })
-    localStorage.setItem('Rider', this.state.select)
-}
-// componentWillMount() {
+    // }
+    render() {
 
-// }
-render() {
+        const { classes } = this.props
+        return (
+            <Paper>
 
-    const { classes } = this.props
-    return (
-        <Paper>
-
-            <Paper className={this.state.select ? classes.riderInfoDivfalse : classes.riderInfoDiv}>
-                <div className="rider-banner">
-                    <div className="text">Join Our Delevery Team!</div>
-                    <Button className="button-apply" variant="outlined" color="inherit" onClick={() => this.setState({ Rider: true })}>Apply Now</Button>
-                    <CloseIcon className="close-button" onClick={() => this.storage()} />
-                </div>
-            </Paper>
-            <Paper className={classes.main} style={{ backgroundImage: `url(${img1})` }}>
-                <Paper className={classes.root}>
-                    <Paper className={classes.div2}>
-                        <Paper className={classes.detail}>
-                            <img style={{ height: '65vh' }} src={img2} />
-                        </Paper>
-                    </Paper>
-                    <Paper className={classes.div3}>
-                        <Paper className={classes.form}>
-                            <div className={classes.center}>
-                                <h1 style={{ textAlign: 'center' }}>Online Food Order App</h1>
-                                <h2 style={{ textAlign: 'center' }}>SignIn</h2>
-                                <Form className="login-form">
-                                    <Form.Item>
-                                        <Input
-                                            value={this.state.email}
-                                            onChange={(ev) => { this.getValue(ev, 'email') }}
-                                            prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                            placeholder="email"
-                                        />
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <Input.Password
-                                            value={this.state.password}
-                                            onChange={(ev) => { this.getValue(ev, 'password') }}
-                                            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                            type="password"
-                                            placeholder="Password"
-                                        />
-                                    </Form.Item>
-                                    <Form.Item>
-
-                                        <Button variant="contained" color="primary" onClick={this.SignIN} type="primary" htmlType="submit" className="login-form-button">
-                                            Log in
-                                </Button>
-                                        Or <Button color="secondary" onClick={this.handlechange}>register now!</Button>
-                                    </Form.Item>
-                                </Form>
-                            </div>
-
-                        </Paper>
-                    </Paper>
+                <Paper className={this.state.select ? classes.riderInfoDivfalse : classes.riderInfoDiv}>
+                    <div className="rider-banner">
+                        <div className="text">Join Our Delevery Team!</div>
+                        <Button className="button-apply" variant="outlined" color="inherit" onClick={() => this.setState({ Rider: true })}>Apply Now</Button>
+                        <CloseIcon className="close-button" onClick={() => this.storage()} />
+                    </div>
                 </Paper>
+                <Paper className={classes.main} style={{ backgroundImage: `url(${img1})` }}>
+                    <Paper className={classes.root}>
+                        <Paper className={classes.div2}>
+                            <Paper className={classes.detail}>
+                                <img style={{ height: '65vh' }} src={img2} />
+                            </Paper>
+                        </Paper>
+                        <Paper className={classes.div3}>
+                            <Paper className={classes.form}>
+                                <div className={classes.center}>
+                                    <h1 style={{ textAlign: 'center' }}>Online Food Order App</h1>
+                                    <h2 style={{ textAlign: 'center' }}>SignIn</h2>
+                                    <Form className="login-form">
+                                        <Form.Item>
+                                            <Input
+                                                value={this.state.email}
+                                                onChange={(ev) => { this.getValue(ev, 'email') }}
+                                                prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                placeholder="email"
+                                            />
+                                        </Form.Item>
+                                        <Form.Item>
+                                            <Input.Password
+                                                value={this.state.password}
+                                                onChange={(ev) => { this.getValue(ev, 'password') }}
+                                                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                type="password"
+                                                placeholder="Password"
+                                            />
+                                        </Form.Item>
+                                        <Form.Item>
+
+                                            <Button variant="contained" color="primary" onClick={this.SignIN} type="primary" htmlType="submit" className="login-form-button">
+                                                Log in
+                                </Button>
+                                            Or <Button color="secondary" onClick={() => this.handlechange('user')}>register now!</Button>
+                                        </Form.Item>
+                                    </Form>
+                                </div>
+
+                            </Paper>
+                        </Paper>
+                    </Paper>
 
 
-                {
-                    this.state.signup ?
-                        <SignUp close={this.handlechange} open={this.state.signup} />
-                        : null
-                }
-                {
-                    this.state.Rider ?
-                        <RiderSignUp close={this.handlechange2} open={this.state.Rider} />
-                        : null
-                }
+                    {/* {
+                        this.state.signup ?
+                            <SignUp close={this.handlechange} open={this.state.signup} />
+                            : null
+                    } */}
+                    {
+                        this.state.Rider ?
+                            <RiderSignUp close={this.handlechange2} open={this.state.Rider} />
+                            : null
+                    }
+                    {this.state.selectedSignUp == 'Resturent' ?
+                        <ResturentSignUp close={this.handlechange} open={this.state.signup} />
+                        : null}
+                    {this.state.selectedSignUp == 'user' ?
+                        <UserSignUp close={this.handlechange} open={this.state.signup} />
+                        : null}
+                </Paper>
+                <Div2 model = {this.handlechange}/>
             </Paper>
-        </Paper>
 
-    )
-}
+        )
+    }
 }
 const mapStateToProps = (state) => {
     return {

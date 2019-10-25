@@ -142,10 +142,11 @@ class AddItemDailog extends React.Component {
               
             </Form.Item>
             <Form.Item>
-            <Button onClick={this.setData} type="primary" htmlType="submit">
+            <Button color = "primary" variant = "contained" onClick={this.setData} type="primary" htmlType="submit">
                 add
-              </Button> 
-              <Button onClick={()=>this.setState({id : this.state.id - 1})} type="primary" htmlType="submit">
+              </Button> <Button
+              color = "secondary" variant = "contained"
+               onClick={()=>this.setState({id : this.state.id - 1})} type="primary" htmlType="submit">
                 cancel
               </Button>
             </Form.Item>
@@ -214,14 +215,21 @@ class AddItemDailog extends React.Component {
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1d-content" id="panel1d-header">
                                             <Typography>{value}</Typography>
                                         </ExpansionPanelSummary>
-                                        <ExpansionPanelDetails style={{display:'block' , overflowX: 'scroll'}}>
+                                        <ExpansionPanelDetails id="scroll" style={{display:'block' , overflowX: 'scroll'}}>
                                         <Table aria-label="a dense table" className={classes.table} size="small">
                                                     <TableHead>
                                                         <TableRow>
                                                             <TableCell>Dish</TableCell>
                                                             <TableCell align="right">Price</TableCell>
-                                                            <TableCell align="right"></TableCell>
-                                                            <TableCell align="right"></TableCell>
+                                                            <TableCell colSpan="2" align="right">
+                                                            <Button 
+                                                            variant = "contained" 
+                                                            color="secondary"
+                                                            disabled = {this.state.id ? true : false} 
+                                                            onClick={() => { this.setState({ item: value, id: this.state.id + 1 }) }}>
+                                                                Add Items</Button>
+
+                                                            </TableCell>
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
@@ -247,8 +255,8 @@ class AddItemDailog extends React.Component {
                                                                 {item2.name} 
                                                                 </TableCell>
                                                                 <TableCell align="right"> {item2.price}</TableCell>
-                                                                <TableCell align="right" onClick = {()=>{this.edit(item2,index2)}}> <EditIcon/></TableCell>
-                                                                <TableCell align="right"><Popconfirm title="Are You Sure Delete This Task" onConfirm = {()=>{this.delete(item2)}}><DeleteIcon/></Popconfirm> </TableCell>
+                                                                <TableCell align="right" onClick = {()=>{this.edit(item2,index2)}}> <EditIcon /></TableCell>
+                                                                <TableCell align="right"><Popconfirm title="Are You Sure Delete This Task" onConfirm = {()=>{this.delete(item2)}}><DeleteIcon color="error"/></Popconfirm> </TableCell>
                                                             </TableRow>
                                                         )
                                                     }
@@ -261,7 +269,6 @@ class AddItemDailog extends React.Component {
                                             {this.state.item == value ?
                                                 this.inputs(index)
                                                 : null}
-                                            <Button disabled = {this.state.id ? true : false} onClick={() => { this.setState({ item: value, id: this.state.id + 1 }) }}>Add Items</Button>
                                         </ExpansionPanelDetails>
                                     </ExpansionPanel>
                                 )
@@ -270,7 +277,11 @@ class AddItemDailog extends React.Component {
                             : null}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.props.close} className = {classes.btn} color="danger" autoFocus>
+                        <Button onClick={this.props.close} 
+                        // className = {classes.btn} 
+                        variant = "contained"
+                        color="secondary"
+                         autoFocus>
                             ok
                         </Button>
                     </DialogActions>

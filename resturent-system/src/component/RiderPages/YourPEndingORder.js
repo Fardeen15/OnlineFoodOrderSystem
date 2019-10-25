@@ -29,14 +29,11 @@ class PendingOrders extends React.Component {
                 if (this.props.data.Riders) {
                     var val = this.props.data.Riders[user.uid].yourPendingOrders
                     if (val) {
-
                         data = Object.values(val)
-                        console.log(data)
                         this.setState({
                             data: Object.values(val),
                             keys: Object.keys(val)
                         })
-                        console.log(this.state.keys)
                     }
                 }
             }
@@ -47,15 +44,27 @@ class PendingOrders extends React.Component {
     booked = () => {
         auth.onAuthStateChanged((user) => {
             if (user) {
-                console.log(this.state.selectedKey)
+                var Ratingname = this.props.data.Riders[user.uid].name
                 db.ref().child('wholeData').child('Riders').child(user.uid).child('DelevierdOrders').child(this.state.selectedKey).set(this.state.obj).then(() => {
                     db.ref().child('wholeData').child('resturents').child(this.state.obj.resturentId).child('deliveredOrders').child(this.state.selectedKey).set(this.state.obj).then(() => {
-                        db.ref().child('wholeData').child('resturents').child(this.state.obj.resturentId).child('pendingOrder').child(this.state.selectedKey).remove().then(() => {
+                        db.ref().child('wholeData').child('user').child(this.state.obj.id).child('5StarsRating').set(Ratingname).then(() => {
                             db.ref().child('wholeData').child('user').child(this.state.obj.id).child('AcceptedOrders').child(this.state.selectedKey).remove().then(() => {
-                                db.ref().child('wholeData').child('Riders').child(user.uid).child('yourPendingOrders').child(this.state.selectedKey).remove().then(() => {
-                                    this.setState({
-                                        modal: false,
-                                        order: "",
+                                db.ref().child('wholeData').child('resturents').child(this.state.obj.resturentId).child('pendingOrder').child(this.state.selectedKey).remove().then(() => {
+                                    db.ref().child('wholeData').child('Riders').child(user.uid).child('yourPendingOrders').child(this.state.selectedKey).remove().then(() => {
+                                        this.setState({
+                                            modal: false,
+                                            order: "",
+                                        })
+                                        if (this.props.data.Riders) {
+                                            var val = this.props.data.Riders[user.uid].yourPendingOrders
+                                            if (val) {
+                                                data = Object.values(val)
+                                                this.setState({
+                                                    data: Object.values(val),
+                                                    keys: Object.keys(val)
+                                                })
+                                            }
+                                        }
                                     })
                                 })
                             })
@@ -204,7 +213,11 @@ class PendingOrders extends React.Component {
         ];
         return (
             <div>
-                <Table className={'scroll'} style={{ overflowX: "scroll" }} columns={columns} dataSource={data} />
+                <Table
+                    pagination={{ pageSize: 20 }}
+                    scroll={{ y: 900 }}
+                    className={'scroll'} style={{ overflowX: "scroll" }} columns={columns}
+                    dataSource={this.state.data.length ? this.state.data : []} />
                 <Modal
                     onOk={() => this.booked()}
                     okText={'Deleiverd'}
