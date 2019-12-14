@@ -52,14 +52,18 @@ class UsersMainPage extends React.Component {
     change = (ev) => {
         this.setState({
             ResturentName: ev.target.value,
-            arr :[],
+            arr: [],
         }, (ev) => {
 
             let { arr } = this.state
             var filter = () => {
                 return Object.values(this.props.data).filter(place => {
                     var regex = new RegExp(this.state.ResturentName, "gi");
-                    return place.ResturentName.match(regex)
+                    if (place.ResturentName) {
+                        return place.ResturentName.match(regex)
+                    }else{
+                        console.log(place.ResturentName)
+                    }
                 })
             }
             // console.log()
@@ -80,13 +84,13 @@ class UsersMainPage extends React.Component {
                 <AppBarComponent ResturentName={this.state.ResturentName} val={this.change} />
                 <main>
                     <Paper className={classes.paperWeb}>
-                        <div id ="scroll" className={classes.rgbaDiv}>
-                            <WebMap arr={this.state.arr.length ? this.state.arr : [] } />
+                        <div id="scroll" className={classes.rgbaDiv}>
+                            <WebMap arr={this.state.arr.length ? this.state.arr : []} />
                         </div>
                     </Paper>
                     <Paper className={classes.papermob}>
-                        <div id ="scroll" className={classes.rgbaDiv}>
-                            <MobMap arr={this.state.arr.length ? this.state.arr : [] } />
+                        <div id="scroll" className={classes.rgbaDiv}>
+                            <MobMap arr={this.state.arr.length ? this.state.arr : []} />
                         </div>
                     </Paper>
                 </main>
